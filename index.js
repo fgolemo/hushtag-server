@@ -1,6 +1,10 @@
 var express = require('express');
 var app = express();
-var cool = require('cool-ascii-faces');
+var redis = require('redis');
+var url = require('url');
+var redisURL = url.parse(process.env.REDISCLOUD_URL || "redis://user:foobared@127.0.0.1:6379");
+var client = redis.createClient(redisURL.port, redisURL.hostname, {no_ready_check: true});
+client.auth(redisURL.auth.split(":")[1]);
 
 app.set('port', (process.env.PORT || 5000));
 
@@ -14,12 +18,15 @@ app.get('/', function (request, response) {
     response.render('pages/index');
 });
 
-app.get('/cool', function (request, response) {
-    response.send(cool());
-});
+
+
 
 app.listen(app.get('port'), function () {
     console.log('Node app is running on port', app.get('port'));
+    client.set('foo', 'bar');
+    client.get('foo', function (err, reply) {
+        console.log(reply.toString()); // Will print `bar`
+    });
 });
 
 
