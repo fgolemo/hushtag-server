@@ -4,11 +4,18 @@ var redis = require('redis');
 var url = require('url');
 var redisURL = url.parse(process.env.REDISCLOUD_URL || "redis://user:foobared@127.0.0.1:6379");
 var client = redis.createClient(redisURL.port, redisURL.hostname, {no_ready_check: true});
+var bodyParser = require('body-parser')
+
 client.auth(redisURL.auth.split(":")[1]);
 
 app.set('port', (process.env.PORT || 5000));
 
 app.use(express.static(__dirname + '/public'));
+app.use(bodyParser.json());       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+    extended: true
+}));
+
 
 // views is directory for all template files
 app.set('views', __dirname + '/views');
@@ -20,20 +27,21 @@ app.get('/', function (request, response) {
 
 app.get('/events', getEvents);
 app.get('/event/:id', getEvent);
+app.post('/events', postEvent);
 
 function getAll(key, res, next) {
-    getIDs(key+"s", function (ids) {
+    getIDs(key + "s", function (ids) {
         var multiQuery = [];
         ids.forEach(function (id, index) {
-            multiQuery.push(["hgetall", key+":"+id.toString()]);
+            multiQuery.push(["hgetall", key + ":" + id.toString()]);
         });
         client.multi(multiQuery).exec(function (err, replies) {
             if (err) {
-                console.log("error during multiquery, key:"+key);
+                console.log("error during multiquery, key:" + key);
                 console.log(err);
             } else {
                 var out = [];
-                replies.forEach(function(obj, index) {
+                replies.forEach(function (obj, index) {
                     out.push(obj);
                 });
                 res.json(out);
@@ -49,15 +57,47 @@ function getEvents(req, res, next) {
 
 function getEvent(req, res, next) {
     var id = req.params.id;
-    getDetail("event", id, function(result) {
+    getDetail("event", id, function (result) {
         res.json(result);
     });
+}
+
+function postEvent(req, res, next) {
+    var event = {
+        name: req.body.name
+    };
+    createDetail("event", event, res, next);
+}
+
+function createDetail(key, obj, res, next) {
+    client.incr(key + "ID", function (err, nextID) {
+        if (err) {
+            console.log("error while incrementing IDs for " + key);
+            console.log(err);
+        } else {
+            obj.id = nextID;
+            var hash = key + ":" + nextID;
+            client.multi([
+                ["hmset", hash, obj],
+                ["sadd", key + "s", nextID]
+            ]).exec(function (err) {
+                    if (err) {
+                        console.log("error while inserting data for " + hash);
+                        console.dir(obj);
+                        console.log(err);
+                    } else {
+                        res.json({status: "success", obj: obj});
+                    }
+                }
+            );
+        }
+    })
 }
 
 function getIDs(key, cb) {
     client.smembers(key, function (err, obj) {
         if (err) {
-            console.log("error while looking for set members of "+key);
+            console.log("error while looking for set members of " + key);
             console.log(err);
         } else {
             cb(obj);
@@ -66,10 +106,10 @@ function getIDs(key, cb) {
 }
 
 function getDetail(key, id, cb) {
-    var hash = key+":"+id;
+    var hash = key + ":" + id;
     client.hgetall(hash, function (err, obj) {
         if (err) {
-            console.log("error while looking for hash:"+hash);
+            console.log("error while looking for hash:" + hash);
             console.log(err);
         } else {
             cb(obj);
