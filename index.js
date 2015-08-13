@@ -29,6 +29,7 @@ app.get('/events', getEvents);
 app.get('/event/:id', getEvent);
 app.post('/events', postEvent);
 app.put('/event/:id', putEvent);
+app.delete('/event/:id', deleteEvent);
 
 function getAll(key, res, next) {
     getIDs(key + "s", function (ids) {
@@ -58,9 +59,7 @@ function getEvents(req, res, next) {
 
 function getEvent(req, res, next) {
     var id = req.params.id;
-    getDetail("event", id, function (result) {
-        res.json(result);
-    });
+    getDetail("event", id, res, next);
 }
 
 function postEvent(req, res, next) {
@@ -76,6 +75,11 @@ function putEvent(req, res, next) {
         name: req.body.name
     };
     updateDetail("event", id, event, res, next);
+}
+
+function deleteEvent(req, res, next) {
+    var id = req.params.id;
+    deleteDetail("event", id, res, next);
 }
 
 function createDetail(key, obj, res, next) {
@@ -106,13 +110,24 @@ function createDetail(key, obj, res, next) {
 function updateDetail(key, id, obj, res, next) {
     obj.id = id;
     var hash = key + ":" + id;
-    client.hmset(hash, obj, function(err) {
+    client.hmset(hash, obj, function (err) {
         if (err) {
             console.log("error while updating data for " + hash);
             console.dir(obj);
             console.log(err);
         } else {
             res.json({status: "success", obj: obj});
+        }
+    });
+}
+
+function deleteDetail(key, id, res, next) {
+    client.srem(key + "s", id, function (err) {
+        if (err) {
+            console.log("error while deleting id " + id + " for " + key);
+            console.log(err);
+        } else {
+            res.json({status: "success", id: id});
         }
     });
 }
@@ -128,14 +143,14 @@ function getIDs(key, cb) {
     });
 }
 
-function getDetail(key, id, cb) {
+function getDetail(key, id, res, next) {
     var hash = key + ":" + id;
     client.hgetall(hash, function (err, obj) {
         if (err) {
             console.log("error while looking for hash:" + hash);
             console.log(err);
         } else {
-            cb(obj);
+            res.json(obj);
         }
     });
 }
