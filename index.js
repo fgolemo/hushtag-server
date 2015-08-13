@@ -18,7 +18,24 @@ app.get('/', function (request, response) {
     response.render('pages/index');
 });
 
+app.get('/keys/:pattern?', getKeys);
+app.get('/key/:key', getKeyDetails);
 
+function getKeys(req, res, next) {
+    var pattern = req.params.pattern || "*";
+    console.log('getting keys matching pattern ' + pattern);
+    client.keys(pattern, function(err, keys) {
+        res.json(keys);
+    });
+}
+
+function getKeyDetails(req, res, next) {
+    var key = req.params.key;
+    console.log('getting value of key ' + key);
+    client.get(key, function(err, value) {
+        res.json(value);
+    });
+}
 
 
 app.listen(app.get('port'), function () {
