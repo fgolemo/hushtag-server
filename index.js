@@ -28,6 +28,7 @@ app.get('/', function (request, response) {
 app.get('/events', getEvents);
 app.get('/event/:id', getEvent);
 app.post('/events', postEvent);
+app.put('/event/:id', putEvent);
 
 function getAll(key, res, next) {
     getIDs(key + "s", function (ids) {
@@ -69,6 +70,14 @@ function postEvent(req, res, next) {
     createDetail("event", event, res, next);
 }
 
+function putEvent(req, res, next) {
+    var id = req.params.id;
+    var event = {
+        name: req.body.name
+    };
+    updateDetail("event", id, event, res, next);
+}
+
 function createDetail(key, obj, res, next) {
     client.incr(key + "ID", function (err, nextID) {
         if (err) {
@@ -91,7 +100,21 @@ function createDetail(key, obj, res, next) {
                 }
             );
         }
-    })
+    });
+}
+
+function updateDetail(key, id, obj, res, next) {
+    obj.id = id;
+    var hash = key + ":" + id;
+    client.hmset(hash, obj, function(err) {
+        if (err) {
+            console.log("error while updating data for " + hash);
+            console.dir(obj);
+            console.log(err);
+        } else {
+            res.json({status: "success", obj: obj});
+        }
+    });
 }
 
 function getIDs(key, cb) {
