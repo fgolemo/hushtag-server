@@ -25,13 +25,137 @@ app.get('/', function (request, response) {
     response.render('pages/index');
 });
 
+
+
+//====================== EVENT
+
 app.get('/events', getEvents);
 app.get('/event/:id', getEvent);
 app.post('/events', postEvent);
 app.put('/event/:id', putEvent);
 app.delete('/event/:id', deleteEvent);
 
-function getAll(key, res, next) {
+function packEvent(obj) {
+    var out = {
+        name: obj.name,
+        pics: JSON.stringify(obj.pics || []),
+        comments: JSON.stringify(obj.comments || []),
+        flags: JSON.stringify(obj.flags || []),
+        tags: JSON.stringify(obj.tags || []),
+        description: obj.description,
+        start: obj.start,
+        end: obj.end,
+        invite_only: obj.invite_only,
+        invitees: JSON.stringify(obj.invitees || []),
+        location: obj.location,
+        organizer: obj.organizer
+    };
+    return out;
+}
+
+function unpackEvent(obj) {
+    obj.pics = JSON.parse(obj.pics);
+    obj.flags = JSON.parse(obj.flags);
+    obj.tags = JSON.parse(obj.tags);
+    obj.comments = JSON.parse(obj.comments);
+    obj.invitees = JSON.parse(obj.invitees);
+    return obj;
+}
+
+function getEvents(req, res, next) {
+    getAll("event", res, next, unpackEvent);
+}
+
+function getEvent(req, res, next) {
+    var id = req.params.id;
+    getDetail("event", id, res, next, unpackEvent);
+}
+
+function postEvent(req, res, next) {
+    var obj = packEvent(req.body);
+    createDetail("event", obj, res, next, unpackEvent);
+}
+
+function putEvent(req, res, next) {
+    var id = req.params.id;
+    var obj = packEvent(req.body);;
+    updateDetail("event", id, obj, res, next, unpackEvent);
+}
+
+function deleteEvent(req, res, next) {
+    var id = req.params.id;
+    deleteDetail("event", id, res, next);
+}
+
+
+
+//====================== HUSHTAG
+
+app.get('/hushtags', getHushtags);
+app.get('/hushtag/:id', getHushtag);
+app.post('/hushtags', postHushtag);
+app.put('/hushtag/:id', putHushtag);
+app.delete('/hushtag/:id', deleteHushtag);
+
+function packHushtag(obj) {
+    var out = {
+        name: obj.name,
+        pics: JSON.stringify(obj.pics || []),
+        comments: JSON.stringify(obj.comments || []),
+        flags: JSON.stringify(obj.flags || []),
+        tags: JSON.stringify(obj.tags || []),
+        uses: JSON.stringify(obj.family || []),
+        forms: obj.forms,
+        synonyms: obj.synonyms,
+        description: obj.description,
+        safety: obj.safety,
+        legality: obj.legality,
+        dosages: obj.dosages,
+        family: JSON.stringify(obj.family || [])
+    };
+    return out;
+}
+
+function unpackHushtag(obj) {
+    obj.pics = JSON.parse(obj.pics);
+    obj.flags = JSON.parse(obj.flags);
+    obj.tags = JSON.parse(obj.tags);
+    obj.comments = JSON.parse(obj.comments);
+    obj.family = JSON.parse(obj.family);
+    obj.uses = JSON.parse(obj.uses);
+    return obj;
+}
+
+function getHushtags(req, res, next) {
+    getAll("hushtag", res, next, unpackHushtag);
+}
+
+function getHushtag(req, res, next) {
+    var id = req.params.id;
+    getDetail("hushtag", id, res, next, unpackHushtag);
+}
+
+function postHushtag(req, res, next) {
+    var obj = packHushtag(req.body);
+    createDetail("hushtag", obj, res, next, unpackHushtag);
+}
+
+function putHushtag(req, res, next) {
+    var id = req.params.id;
+    var obj = packHushtag(req.body);
+    updateDetail("hushtag", id, obj, res, next, unpackHushtag);
+}
+
+function deleteHushtag(req, res, next) {
+    var id = req.params.id;
+    deleteDetail("hushtag", id, res, next);
+}
+
+
+
+//====================== SHARED
+
+function getAll(key, res, next, unpacker) {
     getIDs(key + "s", function (ids) {
         var multiQuery = [];
         ids.forEach(function (id, index) {
@@ -44,7 +168,7 @@ function getAll(key, res, next) {
             } else {
                 var out = [];
                 replies.forEach(function (obj, index) {
-                    out.push(obj);
+                    out.push(unpacker(obj));
                 });
                 res.json(out);
             }
@@ -52,37 +176,7 @@ function getAll(key, res, next) {
     });
 }
 
-function getEvents(req, res, next) {
-    var key = "event";
-    getAll(key, res, next);
-}
-
-function getEvent(req, res, next) {
-    var id = req.params.id;
-    getDetail("event", id, res, next);
-}
-
-function postEvent(req, res, next) {
-    var event = {
-        name: req.body.name
-    };
-    createDetail("event", event, res, next);
-}
-
-function putEvent(req, res, next) {
-    var id = req.params.id;
-    var event = {
-        name: req.body.name
-    };
-    updateDetail("event", id, event, res, next);
-}
-
-function deleteEvent(req, res, next) {
-    var id = req.params.id;
-    deleteDetail("event", id, res, next);
-}
-
-function createDetail(key, obj, res, next) {
+function createDetail(key, obj, res, next, unpacker) {
     client.incr(key + "ID", function (err, nextID) {
         if (err) {
             console.log("error while incrementing IDs for " + key);
@@ -99,7 +193,7 @@ function createDetail(key, obj, res, next) {
                         console.dir(obj);
                         console.log(err);
                     } else {
-                        res.json({status: "success", obj: obj});
+                        res.json({status: "success", obj: unpacker(obj)});
                     }
                 }
             );
@@ -107,7 +201,7 @@ function createDetail(key, obj, res, next) {
     });
 }
 
-function updateDetail(key, id, obj, res, next) {
+function updateDetail(key, id, obj, res, next, unpacker) {
     obj.id = id;
     var hash = key + ":" + id;
     client.hmset(hash, obj, function (err) {
@@ -116,7 +210,7 @@ function updateDetail(key, id, obj, res, next) {
             console.dir(obj);
             console.log(err);
         } else {
-            res.json({status: "success", obj: obj});
+            res.json({status: "success", obj: unpacker(obj)});
         }
     });
 }
@@ -143,14 +237,14 @@ function getIDs(key, cb) {
     });
 }
 
-function getDetail(key, id, res, next) {
+function getDetail(key, id, res, next, unpacker) {
     var hash = key + ":" + id;
     client.hgetall(hash, function (err, obj) {
         if (err) {
             console.log("error while looking for hash:" + hash);
             console.log(err);
         } else {
-            res.json(obj);
+            res.json(unpacker(obj));
         }
     });
 }
