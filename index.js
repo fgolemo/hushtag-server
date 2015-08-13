@@ -158,6 +158,52 @@ function deleteHushtag(req, res, next) {
 
 
 
+//====================== LOCATION
+
+app.get('/locations', getLocations);
+app.get('/location/:id', getLocation);
+app.post('/locations', postLocation);
+app.put('/location/:id', putLocation);
+app.delete('/location/:id', deleteLocation);
+
+function packLocation(obj) {
+    var out = {
+        name: obj.name,
+    };
+    return out;
+}
+
+function unpackLocation(obj) {
+    return obj;
+}
+
+function getLocations(req, res, next) {
+    getAll("location", res, next, unpackLocation);
+}
+
+function getLocation(req, res, next) {
+    var id = req.params.id;
+    getDetail("location", id, res, next, unpackLocation);
+}
+
+function postLocation(req, res, next) {
+    var obj = packLocation(req.body);
+    createDetail("location", obj, res, next, unpackLocation);
+}
+
+function putLocation(req, res, next) {
+    var id = req.params.id;
+    var obj = packLocation(req.body);
+    updateDetail("location", id, obj, res, next, unpackLocation);
+}
+
+function deleteLocation(req, res, next) {
+    var id = req.params.id;
+    deleteDetail("location", id, res, next);
+}
+
+
+
 //====================== SHARED
 
 function getAll(key, res, next, unpacker) {
