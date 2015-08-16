@@ -1,0 +1,44 @@
+AUTH foobared
+
+FLUSHDB
+
+HMSET hushtag:1 "id" "1" "name" "Amphetamine" "family" "[]" "pics" '["abc.png","def.png"]' "dosages" "dosages..." "legality" "legality..." "safety" "safety..." "description" "desc..." "synonyms" "[]" "forms" "forms..." "uses" "[]" "comments" "[]" "tags" "[]" "flags" "[]"
+
+HMSET hushtag:2 "id" "2" "name" "BBB" "family" "[]" "pics" '["abc2.png","def2.png"]' "dosages" "dosages...2" "legality" "legality...2" "safety" "safety...2" "description" "desc...2" "synonyms" "[]" "forms" "forms...2" "uses" "[]" "comments" "[]" "tags" "[]" "flags" "[]"
+
+HMSET hushtag:3 "id" "3" "name" "AAABB" "family" "[]" "pics" '["abc3.png","def3.png"]' "dosages" "dosages...3" "legality" "legality...3" "safety" "safety...3" "description" "desc...3" "synonyms" "[]" "forms" "forms...3" "uses" "[]" "comments" "[]" "tags" "[]" "flags" "[]"
+
+SADD hushtags 1 2 3
+SET hushtagID 3
+
+
+
+HMSET event:1 "id" "1" "name" "Steve Aoki" "pics" '["/img/200px.png","img/200px2.png"]' "description" "desc..." "comments" "[]" "tags" "[]" "flags" "[]" "start" "2015/08/08 21:00" "end" "2015/08/08 23:59" "invite_only" false "invitees" "[]" "location" "1" "organizer" "1"
+
+HMSET event:2 "id" "2" "name" "Melt Festival" "pics" '["/img/200px.png","img/200px2.png","img/200px3.png"]' "description" "desc...2" "comments" "[]" "tags" "[]" "flags" "[]" "start" "2015/08/10 18:00" "end" "2015/08/15 23:59" "invite_only" false "invitees" "[]" "location" "2" "organizer" "2"
+
+HMSET event:3 "id" "3" "name" "Fiesta Macumba" "pics" '["img/200px.png","img/200px2.png","img/200px3.png","img/500px.png"]' "description" "desc...3" "comments" "[]" "tags" "[]" "flags" "[]" "start" "2015/08/09 23:00" "end" null "invite_only" false "invitees" "[]" "location" "3" "organizer" "3"
+
+SADD events 1 2 3
+SET eventID 3
+
+HMSET location:1 "id" "1" "name" "Cool Club"
+
+HMSET location:2 "id" "2" "name" "Melkweg"
+
+HMSET location:3 "id" "3" "name" "Paradiso"
+
+SADD locations 1 2 3
+SET locationID 3
+
+HMSET user:1 "id" "1" "name" "admin" "password_hash" "057a0ac66d564962f1bcb0e0f6ec1973f3e88305c5aefa94b4bca4c4076f2633" "avatar" "" "created" "2015/07/01" "lastloggedin" "2015/08/01 12:00" "contact" "fgolemo+hushtag@gmail.com"
+
+HMSET user:2 "id" "2" "name" "test" "password_hash" "19d0d145aafe123032f183e4618ac27a23bb18eb102c85e510140a080e10d2dd" "avatar" "" "created" "2015/07/15" "lastloggedin" "2015/08/15 12:00" "contact" "don't contact me pls"
+
+SADD users 1 2
+SADD usernames admin test
+ZADD userids 1 admin 2 test
+SET userID 2
+
+SAVE
+
