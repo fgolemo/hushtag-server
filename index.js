@@ -17,10 +17,10 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
     extended: true
 }));
 
-app.use(function(req, res, next) { // allow cors
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
-  next();
+app.use(function (req, res, next) { // allow cors
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    next();
 });
 
 // views is directory for all template files
@@ -30,7 +30,6 @@ app.set('view engine', 'ejs');
 app.get('/', function (request, response) {
     response.render('pages/index');
 });
-
 
 
 //====================== EVENT
@@ -84,7 +83,8 @@ function postEvent(req, res, next) {
 
 function putEvent(req, res, next) {
     var id = req.params.id;
-    var obj = packEvent(req.body);;
+    var obj = packEvent(req.body);
+    ;
     updateDetail("event", id, obj, res, next, unpackEvent);
 }
 
@@ -92,7 +92,6 @@ function deleteEvent(req, res, next) {
     var id = req.params.id;
     deleteDetail("event", id, res, next);
 }
-
 
 
 //====================== HUSHTAG
@@ -158,7 +157,6 @@ function deleteHushtag(req, res, next) {
 }
 
 
-
 //====================== LOCATION
 
 app.get('/locations', getLocations);
@@ -204,8 +202,6 @@ function deleteLocation(req, res, next) {
 }
 
 
-
-
 //====================== USER
 
 app.get('/user/:id', getUser);
@@ -229,8 +225,6 @@ function getUser(req, res, next) {
 }
 
 
-
-
 //====================== LOGIN
 
 app.post('/login', login);
@@ -246,20 +240,18 @@ function login(req, res, next) {
             console.log("error while looking up score for user:" + name);
             console.log(err);
         } else {
-            console.log("found username");
-            getDetail("user", obj, res, next, function(userData) {
-                console.log("hash:");
-                console.log(hash);
-                console.log("server:");
-                console.log(userData.password_hash);
+            if (obj == null) {
+                res.json({status: "fail", msg: "wrong pass"});
+            } else {
+                getDetail("user", obj, res, next, function (userData) {
+                    if (userData.password_hash == hash) {
+                        return {status: "success", obj: unpackUserPrivileged(userData)};
+                    } else {
+                        return {status: "fail", msg: "wrong pass"};
+                    }
+                });
+            }
 
-                if (userData.password_hash == hash) {
-
-                    return {status: "success", obj: unpackUserPrivileged(userData)};
-                } else {
-                    return {status: "fail", msg: "wrong pass"};
-                }
-            });
         }
     });
 }
@@ -267,10 +259,6 @@ function login(req, res, next) {
 function signup(req, res, next) {
     //TODO: implement signup
 }
-
-
-
-
 
 
 //====================== SHARED
