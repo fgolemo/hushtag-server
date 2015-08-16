@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var redis = require('redis');
 var url = require('url');
+var crypto = require('crypto');
 var redisURL = url.parse(process.env.REDISCLOUD_URL || "redis://user:foobared@127.0.0.1:6379");
 var client = redis.createClient(redisURL.port, redisURL.hostname, {no_ready_check: true});
 var bodyParser = require('body-parser')
@@ -201,6 +202,74 @@ function deleteLocation(req, res, next) {
     var id = req.params.id;
     deleteDetail("location", id, res, next);
 }
+
+
+
+
+//====================== USER
+
+app.get('/user/:id', getUser);
+
+function unpackUser(obj) {
+    obj.password_hash = "";
+    delete obj.lastloggedin;
+    delete obj.created;
+    obj.contact = "";
+    return obj;
+}
+
+function unpackUserPrivileged(obj) { // only called when user = self
+    obj.password_hash = "";
+    return obj;
+}
+
+function getUser(req, res, next) {
+    var id = req.params.id;
+    getDetail("user", id, res, next, unpackUser);
+}
+
+
+
+
+//====================== LOGIN
+
+app.post('/login', login);
+app.post('/signup', signup);
+
+
+function login(req, res, next) {
+    console.log("trying to log in");
+    var name = req.body.name;
+    var hash = req.body.hash;
+    client.zscore(["userids", name], function (err, obj) {
+        if (err) {
+            console.log("error while looking up score for user:" + name);
+            console.log(err);
+        } else {
+            console.log("found username");
+            getDetail("user", obj, res, next, function(userData) {
+                console.log("hash:");
+                console.log(hash);
+                console.log("server:");
+                console.log(userData.password_hash);
+
+                if (userData.password_hash == hash) {
+
+                    return {status: "success", obj: unpackUserPrivileged(userData)};
+                } else {
+                    return {status: "fail", msg: "wrong pass"};
+                }
+            });
+        }
+    });
+}
+
+function signup(req, res, next) {
+    //TODO: implement signup
+}
+
+
+
 
 
 
