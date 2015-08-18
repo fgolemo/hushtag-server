@@ -44,8 +44,10 @@ module.exports = (function() {
                 } else {
                     rest.getDetail("user", obj, res, next, function (userData) {
                         if (userData.password_hash == hash) {
+                            console.log("INFO: user "+name+" successfully logged in");
                             return {status: "success", obj: unpackUserPrivileged(userData)};
                         } else {
+                            console.log("INFO: user "+name+" bad login");
                             return {status: "fail", msg: "wrong pass"};
                         }
                     });
@@ -55,8 +57,57 @@ module.exports = (function() {
         });
     }
 
+    function makeUser (name, hash) {
+        return {
+            name: name,
+            password_hash: hash,
+            avatar: "",
+            created: new Date(),
+            lastloggedin: new Date(),
+            contact: ""
+        };
+    }
+
     function signup(req, res, next) {
-        //TODO: implement signup
+        var name = req.body.name;
+        var hash = req.body.hash;
+        rest.client.sismember(["usernames", name], function(err, userExists) {
+            if (err) {
+                console.log("error while looking up if username exists:" + name);
+                console.log(err);
+            } else {
+                if (userExists) {
+                    res.json({status: "fail", msg: "name is already taken"});
+                } else {
+                    var obj = makeUser(name, hash);
+                    rest.client.incr("userID", function (err, nextID) {
+                        if (err) {
+                            console.log("error while incrementing IDs for user");
+                            console.log(err);
+                        } else {
+                            obj.id = nextID;
+                            var hash = "user:" + nextID;
+                            rest.client.multi([
+                                ["hmset", hash, obj],
+                                ["zadd", "userids", nextID, name],
+                                ["sadd", "usernames", name],
+                                ["sadd", "users", nextID]
+                            ]).exec(function (err) {
+                                    if (err) {
+                                        console.log("error while inserting data for " + hash);
+                                        console.dir(obj);
+                                        console.log(err);
+                                    } else {
+                                        console.log("INFO: user "+name+" signed up");
+                                        res.json({status: "success", obj: unpackUserPrivileged(obj)});
+                                    }
+                                }
+                            );
+                        }
+                    });
+                }
+            }
+        });
     }
 
 
