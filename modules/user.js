@@ -1,4 +1,5 @@
 var express = require('express');
+var moment = require('moment');
 var rest = require('./rest');
 
 module.exports = (function() {
@@ -17,6 +18,8 @@ module.exports = (function() {
 
     function unpackUserPrivileged(obj) { // only called when user = self
         obj.password_hash = "";
+        obj.lastloggedin = moment(obj.lastloggedin);
+        obj.created = moment(obj.created);
         return obj;
     }
 
@@ -58,12 +61,13 @@ module.exports = (function() {
     }
 
     function makeUser (name, hash) {
+        var d = new Date();
         return {
             name: name,
             password_hash: hash,
             avatar: "",
-            created: new Date(),
-            lastloggedin: new Date(),
+            created: d.toISOString(),
+            lastloggedin: d.toISOString(),
             contact: ""
         };
     }
@@ -77,6 +81,7 @@ module.exports = (function() {
                 console.log(err);
             } else {
                 if (userExists) {
+                    console.log("INFO: user "+name+" attempted to sign up, but exists");
                     res.json({status: "fail", msg: "name is already taken"});
                 } else {
                     var obj = makeUser(name, hash);
