@@ -7,7 +7,7 @@ client.auth(redisURL.auth.split(":")[1]);
 module.exports = {
     client: client,
     getAll: function (key, res, next, unpacker) {
-        getIDs(key + "s", function (ids) {
+        this.getIDs(key + "s", function (ids) {
             var multiQuery = [];
             ids.forEach(function (id, index) {
                 multiQuery.push(["hgetall", key + ":" + id.toString()]);
