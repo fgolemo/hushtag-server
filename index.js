@@ -6,6 +6,7 @@ var handlerHushtag = require('./modules/hushtag');
 var handlerEvent = require('./modules/event');
 var handlerLocation = require('./modules/location');
 var handlerUser = require('./modules/user');
+var handlerRep = require('./modules/rep');
 
 
 app.set('port', (process.env.PORT || 5000));
@@ -34,6 +35,7 @@ app.use('/', handlerHushtag);
 app.use('/', handlerEvent);
 app.use('/', handlerLocation);
 app.use('/', handlerUser);
+app.use('/', handlerRep);
 
 app.listen(app.get('port'), function () {
     console.log('Node app is running on port', app.get('port'));

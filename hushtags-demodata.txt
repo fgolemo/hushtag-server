@@ -40,5 +40,13 @@ SADD usernames admin test
 ZADD userids 1 admin 2 test
 SET userID 2
 
+SET user:1:rep:events 100
+SET user:1:rep:hushtags 10
+SET user:1:rep:locations 0
+
+SET user:2:rep:events 0
+SET user:2:rep:hushtags 100
+SET user:2:rep:locations 100
+
 SAVE
 
