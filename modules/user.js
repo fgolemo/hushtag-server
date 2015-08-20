@@ -96,7 +96,10 @@ module.exports = (function() {
                                 ["hmset", hash, obj],
                                 ["zadd", "userids", nextID, name],
                                 ["sadd", "usernames", name],
-                                ["sadd", "users", nextID]
+                                ["sadd", "users", nextID],
+                                ["set", hash+":rep:events", 0],
+                                ["set", hash+":rep:hushtags", 0],
+                                ["set", hash+":rep:locations", 0]
                             ]).exec(function (err) {
                                     if (err) {
                                         console.log("error while inserting data for " + hash);
