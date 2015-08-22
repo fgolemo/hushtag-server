@@ -53,7 +53,7 @@ module.exports = (function () {
                 console.log("INFO: user " + name + " bad login");
                 res.json({status: "fail", msg: "wrong pass"});
             }
-        }).error(function(err) {
+        }).error(function (err) {
             console.log("error while trying to login user:" + name);
             console.log(err);
             res.json({status: "fail", msg: "There was a server problem, please try again in an hour or so."});
@@ -76,48 +76,40 @@ module.exports = (function () {
 
     function signup(req, res, next) {
         var name = req.body.name;
-        var hash = req.body.hash;
-        rest.client.sismember(["usernames", name], function (err, userExists) {
-            if (err) {
-                console.log("error while looking up if username exists:" + name);
-                console.log(err);
+        var pwhash = req.body.hash;
+        var p = rest.client.sismemberAsync(["usernames", name]).then(function (userExists) {
+            if (userExists) {
+                console.log("INFO: user " + name + " attempted to sign up, but exists");
+                res.json({status: "fail", msg: "name is already taken"});
+                return p.cancel();
             } else {
-                if (userExists) {
-                    console.log("INFO: user " + name + " attempted to sign up, but exists");
-                    res.json({status: "fail", msg: "name is already taken"});
-                } else {
-                    var obj = makeUser(name, hash);
-                    rest.client.incr("userID", function (err, nextID) {
-                        if (err) {
-                            console.log("error while incrementing IDs for user");
-                            console.log(err);
-                        } else {
-                            obj.id = nextID;
-                            var hash = "user:" + nextID;
-                            rest.client.multi([
-                                ["hmset", hash, obj],
-                                ["zadd", "userids", nextID, name],
-                                ["sadd", "usernames", name],
-                                ["sadd", "users", nextID],
-                                ["set", hash + ":rep:events", 0],
-                                ["set", hash + ":rep:hushtags", 0],
-                                ["set", hash + ":rep:locations", 0]
-                            ]).exec(function (err) {
-                                    if (err) {
-                                        console.log("error while inserting data for " + hash);
-                                        console.dir(obj);
-                                        console.log(err);
-                                    } else {
-                                        console.log("INFO: user " + name + " signed up");
-                                        res.json({status: "success", obj: unpackUserPrivileged(obj)});
-                                    }
-                                }
-                            );
-                        }
-                    });
-                }
+                return rest.client.incrAsync("userID");
             }
-        });
+        }).then(function (nextID) {
+            var obj = makeUser(name, pwhash);
+            obj.id = nextID;
+            var hash = "user:" + nextID;
+            rest.client.multi([
+                ["hmset", hash, obj],
+                ["zadd", "userids", nextID, name],
+                ["sadd", "usernames", name],
+                ["sadd", "users", nextID],
+                ["set", hash + ":rep:events", 0],
+                ["set", hash + ":rep:hushtags", 0],
+                ["set", hash + ":rep:locations", 0]
+            ]).execAsync().then(function () {
+                console.log("INFO: user " + name + " signed up");
+                res.json({status: "success", obj: unpackUserPrivileged(obj)});
+            }).error(function (err) {
+                console.log("error while inserting data for " + hash);
+                console.dir(obj);
+                console.log(err);
+            });
+        }).error(function (err) {
+            console.log("ERROR: while user " + name + " attempt to sign up");
+            res.json({status: "fail", msg: "There was a server problem, please try again in an hour or so."});
+        }).cancellable();
+
     }
 
 
