@@ -2,7 +2,7 @@ var express = require('express');
 var moment = require('moment');
 var rest = require('./rest');
 
-module.exports = (function() {
+module.exports = (function () {
     'use strict';
     var app = express.Router();
 
@@ -37,37 +37,32 @@ module.exports = (function() {
     function login(req, res, next) {
         var name = req.body.name;
         var hash = req.body.hash;
-        rest.client.zscore(["userids", name], function (err, id) {
-            if (err) {
-                console.log("error while looking up score for user:" + name);
-                console.log(err);
+        var p = rest.client.zscoreAsync(["userids", name]).then(function (id) {
+            if (id == null) {
+                console.log("INFO: user " + name + " bad login - doesn't exist");
+                res.json({status: "fail", msg: "wrong pass"});
+                return p.cancel();
             } else {
-                if (id == null) {
-                    res.json({status: "fail", msg: "wrong pass"});
-                } else {
-                    rest.client.hgetall("user:" + id, function (err, userData) {
-                        if (err) {
-                            console.log("error while looking for hash:" + hash);
-                            console.log(err);
-                        } else {
-                            if (userData.password_hash == hash) {
-                                console.log("INFO: user "+name+" successfully logged in");
-                                res.json({status: "success", obj: unpackUserPrivileged(userData)});
-                            } else {
-                                console.log("INFO: user "+name+" bad login");
-                                console.log(userData.password_hash);
-                                console.log(hash)
-                                res.json({status: "fail", msg: "wrong pass"});
-                            }
-                        }
-                    });
-                }
-
+                return rest.client.hgetallAsync("user:" + id);
             }
-        });
+        }).then(function (userData) {
+            if (userData.password_hash == hash) {
+                console.log("INFO: user " + name + " successfully logged in");
+                res.json({status: "success", obj: unpackUserPrivileged(userData)});
+            } else {
+                console.log("INFO: user " + name + " bad login");
+                res.json({status: "fail", msg: "wrong pass"});
+            }
+        }).error(function(err) {
+            console.log("error while trying to login user:" + name);
+            console.log(err);
+            res.json({status: "fail", msg: "There was a server problem, please try again in an hour or so."});
+        }).cancellable();
+
+
     }
 
-    function makeUser (name, hash) {
+    function makeUser(name, hash) {
         var d = new Date();
         return {
             name: name,
@@ -82,13 +77,13 @@ module.exports = (function() {
     function signup(req, res, next) {
         var name = req.body.name;
         var hash = req.body.hash;
-        rest.client.sismember(["usernames", name], function(err, userExists) {
+        rest.client.sismember(["usernames", name], function (err, userExists) {
             if (err) {
                 console.log("error while looking up if username exists:" + name);
                 console.log(err);
             } else {
                 if (userExists) {
-                    console.log("INFO: user "+name+" attempted to sign up, but exists");
+                    console.log("INFO: user " + name + " attempted to sign up, but exists");
                     res.json({status: "fail", msg: "name is already taken"});
                 } else {
                     var obj = makeUser(name, hash);
@@ -104,16 +99,16 @@ module.exports = (function() {
                                 ["zadd", "userids", nextID, name],
                                 ["sadd", "usernames", name],
                                 ["sadd", "users", nextID],
-                                ["set", hash+":rep:events", 0],
-                                ["set", hash+":rep:hushtags", 0],
-                                ["set", hash+":rep:locations", 0]
+                                ["set", hash + ":rep:events", 0],
+                                ["set", hash + ":rep:hushtags", 0],
+                                ["set", hash + ":rep:locations", 0]
                             ]).exec(function (err) {
                                     if (err) {
                                         console.log("error while inserting data for " + hash);
                                         console.dir(obj);
                                         console.log(err);
                                     } else {
-                                        console.log("INFO: user "+name+" signed up");
+                                        console.log("INFO: user " + name + " signed up");
                                         res.json({status: "success", obj: unpackUserPrivileged(obj)});
                                     }
                                 }
