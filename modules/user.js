@@ -37,21 +37,28 @@ module.exports = (function() {
     function login(req, res, next) {
         var name = req.body.name;
         var hash = req.body.hash;
-        rest.client.zscore(["userids", name], function (err, obj) {
+        rest.client.zscore(["userids", name], function (err, id) {
             if (err) {
                 console.log("error while looking up score for user:" + name);
                 console.log(err);
             } else {
-                if (obj == null) {
+                if (id == null) {
                     res.json({status: "fail", msg: "wrong pass"});
                 } else {
-                    rest.getDetail("user", obj, res, next, function (userData) {
-                        if (userData.password_hash == hash) {
-                            console.log("INFO: user "+name+" successfully logged in");
-                            return {status: "success", obj: unpackUserPrivileged(userData)};
+                    rest.client.hgetall("user:" + id, function (err, userData) {
+                        if (err) {
+                            console.log("error while looking for hash:" + hash);
+                            console.log(err);
                         } else {
-                            console.log("INFO: user "+name+" bad login");
-                            return {status: "fail", msg: "wrong pass"};
+                            if (userData.password_hash == hash) {
+                                console.log("INFO: user "+name+" successfully logged in");
+                                res.json({status: "success", obj: unpackUserPrivileged(userData)});
+                            } else {
+                                console.log("INFO: user "+name+" bad login");
+                                console.log(userData.password_hash);
+                                console.log(hash)
+                                res.json({status: "fail", msg: "wrong pass"});
+                            }
                         }
                     });
                 }
