@@ -48,5 +48,7 @@ SET user:2:rep:events 0
 SET user:2:rep:hushtags 100
 SET user:2:rep:locations 100
 
+HMSET token:1234567890ab "user" "1"
+
 SAVE
 

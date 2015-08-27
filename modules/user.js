@@ -52,9 +52,10 @@ module.exports = (function () {
             } else {
                 console.log("INFO: user " + name + " bad login");
                 res.json({status: "fail", msg: "wrong pass"});
+                //return p.cancel();
             }
         }).error(function (err) {
-            console.log("error while trying to login user:" + name);
+            console.log("ERROR: while trying to login user:" + name);
             console.log(err);
             res.json({status: "fail", msg: "There was a server problem, please try again in an hour or so."});
         }).cancellable();
