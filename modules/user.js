@@ -1,6 +1,7 @@
 var express = require('express');
 var moment = require('moment');
 var rest = require('./rest');
+var token = require('./token');
 
 module.exports = (function () {
     'use strict';

@@ -49,6 +49,9 @@ SET user:2:rep:hushtags 100
 SET user:2:rep:locations 100
 
 HMSET token:1234567890ab "user" "1"
+SET user:1:token 1234567890ab
+EXPIRE token:1234567890ab 3600
+EXPIRE user:1:token 3600
 
 SAVE
 
