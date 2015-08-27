@@ -26,6 +26,7 @@ module.exports = function(name, packer, unpacker) {
         var userToken = req.body.ut;
         var obj = packer(req.body.obj);
         _verifyUT(userToken, res, function() {
+            console.log("INFO: posting obj: "+name+":"+id);
             rest.createDetail(name, obj, res, next, unpacker);
         });
     }
@@ -35,6 +36,7 @@ module.exports = function(name, packer, unpacker) {
         var userToken = req.body.ut;
         var obj = packer(req.body.obj);
         _verifyUT(userToken, res, function() {
+            console.log("INFO: putting obj: "+name+":"+id);
             rest.updateDetail(name, id, obj, res, next, unpacker);
         });
 

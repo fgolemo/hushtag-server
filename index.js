@@ -20,6 +20,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 app.use(function (req, res, next) { // allow cors
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE");
     next();
 });
 

@@ -13,7 +13,7 @@ module.exports = (function () {
                 tags: JSON.stringify(obj.tags || []),
                 description: obj.description,
                 start: obj.start,
-                end: obj.end,
+                end: obj.end || "",
                 invite_only: obj.invite_only,
                 invitees: JSON.stringify(obj.invitees || []),
                 location: obj.location,
@@ -25,6 +25,7 @@ module.exports = (function () {
             obj.tags = JSON.parse(obj.tags);
             obj.comments = JSON.parse(obj.comments);
             obj.invitees = JSON.parse(obj.invitees);
+            obj.end = obj.end || null;
             return obj;
         }
     );
