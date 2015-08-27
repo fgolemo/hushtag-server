@@ -9,7 +9,7 @@ module.exports = {
         var token = this._tokenHash()
         var tokenHash = "token:" + token;
         var usertokenHash = "user:" + userID + ":token";
-        console.log("creating token:" + tokenHash);
+        //console.log("creating token:" + tokenHash);
         rest.client.multi([
             ["hmset", tokenHash, {user: userID}],
             ["expire", tokenHash, settings.tokenExpireTime],

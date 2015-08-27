@@ -49,7 +49,11 @@ module.exports = (function () {
         }).then(function (userData) {
             if (userData.password_hash == hash) {
                 console.log("INFO: user " + name + " successfully logged in");
-                res.json({status: "success", obj: unpackUserPrivileged(userData)});
+                token.createToken(userData.id, function(token) {
+                    var userObj = unpackUserPrivileged(userData);
+                    userObj.token = token;
+                    res.json({status: "success", obj: userObj});
+                });
             } else {
                 console.log("INFO: user " + name + " bad login");
                 res.json({status: "fail", msg: "wrong pass"});
@@ -60,8 +64,6 @@ module.exports = (function () {
             console.log(err);
             res.json({status: "fail", msg: "There was a server problem, please try again in an hour or so."});
         }).cancellable();
-
-
     }
 
     function makeUser(name, hash) {
@@ -101,7 +103,11 @@ module.exports = (function () {
                 ["set", hash + ":rep:locations", 0]
             ]).execAsync().then(function () {
                 console.log("INFO: user " + name + " signed up");
-                res.json({status: "success", obj: unpackUserPrivileged(obj)});
+                token.createToken(nextID, function(token) {
+                    var userObj = unpackUserPrivileged(obj);
+                    userObj.token = token;
+                    res.json({status: "success", obj: userObj});
+                });
             }).error(function (err) {
                 console.log("error while inserting data for " + hash);
                 console.dir(obj);
