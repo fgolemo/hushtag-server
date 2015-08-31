@@ -15,17 +15,15 @@ SET hushtagID 3
 
 HMSET event:1 "id" "1" "name" "Steve Aoki" "pics" '["/img/200px.png","img/200px2.png"]' "description" "desc..." "comments" "[]" "tags" "[]" "flags" "[]" "start" "2015/08/08 21:00" "end" "2015/08/08 23:59" "invite_only" false "invitees" "[]" "location" "1" "organizer" "1"
 
-HMSET event:2 "id" "2" "name" "Melt Festival" "pics" '["/img/200px.png","img/200px2.png","img/200px3.png"]' "description" "desc...2" "comments" "[]" "tags" "[]" "flags" "[]" "start" "2015/08/10 18:00" "end" "2015/08/15 23:59" "invite_only" false "invitees" "[]" "location" "2" "organizer" "2"
+HMSET event:2 "id" "2" "name" "Melt Festival" "pics" '["/img/200px.png","img/200px2.png","img/200px3.png"]' "description" "desc...2" "comments" "[2]" "tags" "[]" "flags" "[]" "start" "2015/08/10 18:00" "end" "2015/08/15 23:59" "invite_only" false "invitees" "[]" "location" "2" "organizer" "2"
 
-HMSET event:3 "id" "3" "name" "Fiesta Macumba" "pics" '["img/200px.png","img/200px2.png","img/200px3.png","img/500px.png"]' "description" "desc...3" "comments" "[]" "tags" "[]" "flags" "[]" "start" "2015/08/09 23:00" "end" null "invite_only" false "invitees" "[]" "location" "3" "organizer" "3"
+HMSET event:3 "id" "3" "name" "Fiesta Macumba" "pics" '["img/200px.png","img/200px2.png","img/200px3.png","img/500px.png"]' "description" "desc...3" "comments" "[1]" "tags" "[]" "flags" "[]" "start" "2015/08/09 23:00" "end" null "invite_only" false "invitees" "[]" "location" "3" "organizer" "3"
 
 SADD events 1 2 3
 SET eventID 3
 
 HMSET location:1 "id" "1" "name" "Cool Club"
-
 HMSET location:2 "id" "2" "name" "Melkweg"
-
 HMSET location:3 "id" "3" "name" "Paradiso"
 
 SADD locations 1 2 3
@@ -52,6 +50,11 @@ HMSET token:1234567890ab "user" "1"
 SET user:1:token 1234567890ab
 EXPIRE token:1234567890ab 3600
 EXPIRE user:1:token 3600
+
+HMSET comment:1 "id" "1" "content" "cool thing - will check out" "created" "2015-08-18T06:36:40+00:00" "flags" "[]" "owner" "1"
+HMSET comment:2 "id" "2" "content" "yay, more comments" "created" "2015-08-18T04:36:40+00:00" "flags" "[]" "owner" "1"
+SADD comments 1 2
+SET commentID 2
 
 SAVE
 
