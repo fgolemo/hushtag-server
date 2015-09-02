@@ -8,6 +8,7 @@ var handlerUser = require('./modules/user');
 var handlerRep = require('./modules/rep');
 //var handlerTest = require('./modules/test');
 var handlerComment = require('./modules/comment');
+var handlerVote = require('./modules/vote');
 
 
 app.set('port', (process.env.PORT || 5000));
@@ -40,6 +41,7 @@ app.use('/', handlerUser);
 app.use('/', handlerRep);
 //app.use('/', handlerTest);
 app.use('/', handlerComment);
+app.use('/', handlerVote);
 
 app.listen(app.get('port'), function () {
     console.log('Node app is running on port', app.get('port'));

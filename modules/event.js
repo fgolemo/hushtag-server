@@ -26,6 +26,8 @@ module.exports = (function () {
             obj.comments = JSON.parse(obj.comments);
             obj.invitees = JSON.parse(obj.invitees);
             obj.end = obj.end || null;
+            obj.upvotes = obj.upvotes || 0;
+            obj.downvotes = obj.downvotes || 0;
             return obj;
         }
     );

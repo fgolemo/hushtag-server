@@ -15,7 +15,7 @@ module.exports = {
             ["expire", tokenHash, settings.tokenExpireTime],
             ["set", usertokenHash, token],
             ["expire", usertokenHash, settings.tokenExpireTime]
-        ]).execAsync().then(function() {
+        ]).execAsync().then(function () {
             cb(token);
         }).error(function (err) {
             console.log("error while creating token for user " + userID);
@@ -30,16 +30,28 @@ module.exports = {
     tokenValid: function (userID, token, cb) {
         var tokenHash = "token:" + token;
         //var usertokenHash = "user:" + userID + ":token";
-        rest.client.hgetallAsync(tokenHash).then(function(obj) {
+        rest.client.hgetallAsync(tokenHash).then(function (obj) {
             if (obj && obj.user && obj.user == userID) {
                 cb(true);
             } else {
                 cb(false);
             }
-        }).error(function(err) {
-            console.log("ERROR: couldn't validate token "+token+" for user "+userID);
+        }).error(function (err) {
+            console.log("ERROR: couldn't validate token " + token + " for user " + userID);
             console.log(err);
             cb(false);
         });
+    },
+
+    verifyUT: function (ut, res, cb) {
+        if (ut.user && ut.token) {
+            this.tokenValid(ut.user, ut.token, function (response) {
+                if (!response) {
+                    res.json(settings.authFailedResponse);
+                } else {
+                    cb();
+                }
+            });
+        }
     }
 };
