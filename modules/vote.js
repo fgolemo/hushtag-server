@@ -2,6 +2,7 @@ var express = require('express');
 var rest = require('./rest');
 var token = require('./token');
 var settings = require('./settings');
+var rep = require('./rep');
 
 module.exports = (function () {
     'use strict';
@@ -22,10 +23,17 @@ module.exports = (function () {
         });
     }
 
+    function _getVotersHash(obj) {
+        return _getObjHash(obj)+":voters";
+    }
+
+    function _getObjHash(obj) {
+        return obj.type+':'+obj.id;
+    }
+
     function _hasVoted(userToken, obj, res, cb, cbErr) {
         token.verifyUT(userToken, res, function() {
-            //console.log("INFO: posting obj: "+name+":"+id);
-            var hash = obj.type+':'+obj.id+":voters";
+            var hash = _getVotersHash(obj);
             rest.client.sismemberAsync([hash, userToken.user]).then(function(response) {
                 cb(response);
             }).error(function (err) {
@@ -37,30 +45,46 @@ module.exports = (function () {
         });
     }
 
-    function upvote(req, res, next) {
-        console.log("incomming upvote");
+    function vote(updown, req, res, next) {
         var userToken = req.body.ut;
         var obj = req.body.obj;
         _hasVoted(userToken, obj, res, function(response) {
-            console.log("upvoting, hv response");
-            console.dir(response);
-            res.json({});
+            if (response) {
+                res.json({status: "fail", msg: "You already voted."});
+            } else {
+                var hashObj = _getObjHash(obj);
+                var hashVoters = _getVotersHash(obj);
+                rest.client.multi([
+                    ["hincrby", hashObj, updown+"votes", 1],
+                    ["sadd", hashVoters, userToken.user],
+                    ["hget", hashObj, "owner"]
+                ]).execAsync().then(function(response) {
+                    var owner = response[2];
+                    rep.helper.repChange((updown=="up"?"incr":"decr") ,owner, obj.type, function(result) {
+                        if (!result) {
+                            console.log("ERROR: while increasing rep");
+                        }
+                        console.log("INFO: "+updown+"voted "+hashObj+" by user "+userToken.user);
+                        res.json({status: "success", msg: ""});
+                    });
+                }).error(function (err) {
+                    console.log("ERROR: while "+updown+"voting from user " + userToken.user + " on obj:");
+                    console.dir(obj);
+                    console.log(err);
+                    res.json(settings.serverError);
+                });
+            }
         }, function(err) {
-
+            res.json(settings.serverError);
         });
     }
 
-    function downvote(req, res, next) {
-        console.log("incomming downvote");
-        var userToken = req.body.ut;
-        var obj = req.body.obj;
-        _hasVoted(userToken, obj, res, function(response) {
-            console.log("downvoting, hv response");
-            console.dir(response);
-            res.json({});
-        }, function(err) {
+    function upvote(req, res, next) {
+        return vote("up", req, res, next);
+    }
 
-        });
+    function downvote(req, res, next) {
+        return vote("down", req, res, next);
     }
 
     function getUserRep(req, res, next) {

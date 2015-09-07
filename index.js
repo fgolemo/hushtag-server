@@ -38,7 +38,7 @@ app.use('/', handlerHushtag);
 app.use('/', handlerEvent);
 app.use('/', handlerLocation);
 app.use('/', handlerUser);
-app.use('/', handlerRep);
+app.use('/', handlerRep.router);
 //app.use('/', handlerTest);
 app.use('/', handlerComment);
 app.use('/', handlerVote);

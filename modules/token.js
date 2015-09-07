@@ -47,6 +47,7 @@ module.exports = {
         if (ut.user && ut.token) {
             this.tokenValid(ut.user, ut.token, function (response) {
                 if (!response) {
+                    console.log("WARN: auth fail from user: "+ut.user);
                     res.json(settings.authFailedResponse);
                 } else {
                     cb();

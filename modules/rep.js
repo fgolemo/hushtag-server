@@ -26,5 +26,31 @@ module.exports = (function () {
         });
     }
 
-    return app;
+    var helper = {};
+
+    helper.repChange = function(incrDecr, id, type, cb) {
+        var newType = "";
+        if (type == "event" || type == "hushtag" || type == "location") {
+            newType = type + "s";
+        } else if (type == "hushtagUse") {
+            newType = "hushtags";
+        } else {
+            console.log("ERROR: incorrect type for rep increase:"+type);
+            cb(false);
+        }
+        var hash = "user:" + id + ":rep:" + newType;
+        var operation = (incrDecr=="incr"?"incr":"decr") + "Async";
+        rest.client[operation](hash).then(function () {
+            cb(true)
+        }).error(function (err) {
+            console.log("ERROR: increasing rep for user " + id + " on " + type);
+            console.log(err);
+            cb(false);
+        });
+    };
+
+    return {
+        router: app,
+        helper: helper
+    };
 })();

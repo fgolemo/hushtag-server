@@ -17,7 +17,7 @@ module.exports = (function () {
                 invite_only: obj.invite_only,
                 invitees: JSON.stringify(obj.invitees || []),
                 location: obj.location,
-                organizer: obj.organizer
+                owner: obj.owner
             };
         }, function (obj) {
             obj.pics = JSON.parse(obj.pics);
