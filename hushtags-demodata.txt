@@ -25,9 +25,9 @@ SET eventID 3
 SADD event:2:voters 1 2
 SADD event:1:voters 2
 
-HMSET location:1 "id" "1" "name" "Cool Club"
-HMSET location:2 "id" "2" "name" "Melkweg"
-HMSET location:3 "id" "3" "name" "Paradiso"
+HMSET location:1 "id" "1" "name" "Cool Club" "city" "Southampton" "country" "United Kingdom" "countryCode" "UK"
+HMSET location:2 "id" "2" "name" "Melkweg" "city" "Amsterdam" "country" "Netherlands" "countryCode" "NL"
+HMSET location:3 "id" "3" "name" "Paradiso" "city" "Amsterdam" "country" "Netherlands" "countryCode" "NL"
 
 SADD locations 1 2 3
 SET locationID 3
