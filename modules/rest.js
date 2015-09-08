@@ -36,11 +36,11 @@ module.exports = {
         client.incrAsync(key + "ID").then(function (nextID) {
             obj.id = nextID;
             var hash = key + ":" + nextID;
-            return client.multiAsync([
+            return client.multi([
                 ["hmset", hash, obj],
                 ["sadd", key + "s", nextID]
-            ]);
-        }).then(client.exec).then(function () {
+            ]).execAsync();
+        }).then(function () {
             res.json({status: "success", obj: unpacker(obj)});
         }).error(function (err) {
             console.log("error while inserting data for " + hash);
