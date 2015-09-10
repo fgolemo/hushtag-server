@@ -2,7 +2,7 @@ AUTH foobared
 
 FLUSHDB
 
-HMSET hushtag:1 "id" "1" "name" "Amphetamine" "family" "[]" "pics" '["img/200px.png","img/200px2.png"]' "dosages" "dosages..." "legality" "legality..." "safety" "safety..." "description" "desc..." "synonyms" "[]" "forms" "forms..." "uses" "[]" "comments" "[]" "tags" "[]" "flags" "[]"
+HMSET hushtag:1 "id" "1" "name" "Amphetamine" "family" "[]" "pics" '["img/200px.png","img/200px2.png"]' "dosages" "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim." "legality" "Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. " "safety" "Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum." "description" "Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper." "synonyms" "[]" "forms" "tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus." "uses" "[]" "comments" "[]" "tags" "[]" "flags" "[]"
 
 HMSET hushtag:2 "id" "2" "name" "BBB" "family" "[]" "pics" '["img/200px.png","img/200px2.png"]' "dosages" "dosages...2" "legality" "legality...2" "safety" "safety...2" "description" "desc...2" "synonyms" "[]" "forms" "forms...2" "uses" "[]" "comments" "[]" "tags" "[]" "flags" "[]"
 
