@@ -11,9 +11,9 @@ module.exports = (function () {
                 comments: JSON.stringify(obj.comments || []),
                 flags: JSON.stringify(obj.flags || []),
                 tags: JSON.stringify(obj.tags || []),
-                uses: JSON.stringify(obj.family || []),
+                uses: JSON.stringify(obj.uses || []),
                 forms: obj.forms,
-                synonyms: obj.synonyms,
+                synonyms: JSON.stringify(obj.synonyms || []),
                 description: obj.description,
                 safety: obj.safety,
                 legality: obj.legality,
@@ -27,6 +27,7 @@ module.exports = (function () {
             obj.comments = JSON.parse(obj.comments);
             obj.family = JSON.parse(obj.family);
             obj.uses = JSON.parse(obj.uses);
+            obj.synonyms = JSON.parse(obj.synonyms);
             return obj;
         }
     );
