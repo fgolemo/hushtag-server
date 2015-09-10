@@ -2,11 +2,11 @@ AUTH foobared
 
 FLUSHDB
 
-HMSET hushtag:1 "id" "1" "name" "Amphetamine" "family" "[]" "pics" '["abc.png","def.png"]' "dosages" "dosages..." "legality" "legality..." "safety" "safety..." "description" "desc..." "synonyms" "[]" "forms" "forms..." "uses" "[]" "comments" "[]" "tags" "[]" "flags" "[]"
+HMSET hushtag:1 "id" "1" "name" "Amphetamine" "family" "[]" "pics" '["img/200px.png","img/200px2.png"]' "dosages" "dosages..." "legality" "legality..." "safety" "safety..." "description" "desc..." "synonyms" "[]" "forms" "forms..." "uses" "[]" "comments" "[]" "tags" "[]" "flags" "[]"
 
-HMSET hushtag:2 "id" "2" "name" "BBB" "family" "[]" "pics" '["abc2.png","def2.png"]' "dosages" "dosages...2" "legality" "legality...2" "safety" "safety...2" "description" "desc...2" "synonyms" "[]" "forms" "forms...2" "uses" "[]" "comments" "[]" "tags" "[]" "flags" "[]"
+HMSET hushtag:2 "id" "2" "name" "BBB" "family" "[]" "pics" '["img/200px.png","img/200px2.png"]' "dosages" "dosages...2" "legality" "legality...2" "safety" "safety...2" "description" "desc...2" "synonyms" "[]" "forms" "forms...2" "uses" "[]" "comments" "[]" "tags" "[]" "flags" "[]"
 
-HMSET hushtag:3 "id" "3" "name" "AAABB" "family" "[]" "pics" '["abc3.png","def3.png"]' "dosages" "dosages...3" "legality" "legality...3" "safety" "safety...3" "description" "desc...3" "synonyms" "[]" "forms" "forms...3" "uses" "[]" "comments" "[]" "tags" "[]" "flags" "[]"
+HMSET hushtag:3 "id" "3" "name" "AAABB" "family" "[1]" "pics" '["img/200px.png","img/200px2.png"]' "dosages" "dosages...3" "legality" "legality...3" "safety" "safety...3" "description" "desc...3" "synonyms" "[]" "forms" "forms...3" "uses" "[]" "comments" "[]" "tags" "[]" "flags" "[]"
 
 SADD hushtags 1 2 3
 SET hushtagID 3
