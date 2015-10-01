@@ -16,7 +16,7 @@ module.exports = (function () {
                 effect_positive: obj.effect_positive,
                 effect_negative: obj.effect_negative,
                 effect_duration: obj.effect_duration,
-                event: obj.event
+                event: obj.event || ""
             };
         }, function (obj) {
             obj.pics = JSON.parse(obj.pics);
