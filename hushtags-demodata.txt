@@ -19,11 +19,11 @@ SADD storys 1 2
 SET storyID 2
 
 
-HMSET event:1 "id" "1" "name" "Steve Aoki" "pics" '["/img/200px.png","img/200px2.png"]' "description" "desc..." "comments" "[]" "tags" "[]" "flags" "[]" "start" "2015-08-08T021:00:00+00:00" "end" "2015-08-08T023:59:59+00:00" "invite_only" false "invitees" "[]" "location" "1" "owner" "1" "upvotes" "0" "downvotes" "0"
+HMSET event:1 "id" "1" "name" "Steve Aoki" "pics" '["/img/200px.png","img/200px2.png"]' "description" "desc..." "comments" "[]" "tags" "[]" "flags" "[]" "start" "2015-08-08T21:00:00+00:00" "end" "2015-08-08T23:59:59+00:00" "invite_only" false "invitees" "[]" "location" "1" "owner" "1" "upvotes" "0" "downvotes" "0"
 
-HMSET event:2 "id" "2" "name" "Melt Festival" "pics" '["/img/200px.png","img/200px2.png","img/200px3.png"]' "description" "desc...2" "comments" "[2]" "tags" "[]" "flags" "[]" "start" "2015-08-10T018:00:00+00:00" "end" "2015-08-15T023:00:00+00:00" "invite_only" false "invitees" "[]" "location" "2" "owner" "2" "upvotes" "0" "downvotes" "0"
+HMSET event:2 "id" "2" "name" "Melt Festival" "pics" '["/img/200px.png","img/200px2.png","img/200px3.png"]' "description" "desc...2" "comments" "[2]" "tags" "[]" "flags" "[]" "start" "2015-08-10T18:00:00+00:00" "end" "2015-08-15T23:00:00+00:00" "invite_only" false "invitees" "[]" "location" "2" "owner" "2" "upvotes" "0" "downvotes" "0"
 
-HMSET event:3 "id" "3" "name" "Fiesta Macumba" "pics" '["img/200px.png","img/200px2.png","img/200px3.png","img/500px.png"]' "description" "desc...3" "comments" "[1]" "tags" "[]" "flags" "[]" "start" "2015-08-09T023:00:00+00:00" "end" null "invite_only" false "invitees" "[]" "location" "3" "owner" "1" "upvotes" "0" "downvotes" "0"
+HMSET event:3 "id" "3" "name" "Fiesta Macumba" "pics" '["img/200px.png","img/200px2.png","img/200px3.png","img/500px.png"]' "description" "desc...3" "comments" "[1]" "tags" "[]" "flags" "[]" "start" "2015-08-09T23:00:00+00:00" "end" null "invite_only" false "invitees" "[]" "location" "3" "owner" "1" "upvotes" "0" "downvotes" "0"
 
 SADD events 1 2 3
 SET eventID 3
@@ -38,9 +38,9 @@ HMSET location:3 "id" "3" "name" "Paradiso" "city" "Amsterdam" "country" "Nether
 SADD locations 1 2 3
 SET locationID 3
 
-HMSET user:1 "id" "1" "name" "admin" "password_hash" "057a0ac66d564962f1bcb0e0f6ec1973f3e88305c5aefa94b4bca4c4076f2633" "avatar" "" "created" "2015/07/01" "lastloggedin" "2015-08-09T023:00:00+00:00" "contact" "fgolemo+hushtag@gmail.com"
+HMSET user:1 "id" "1" "name" "admin" "password_hash" "057a0ac66d564962f1bcb0e0f6ec1973f3e88305c5aefa94b4bca4c4076f2633" "avatar" "" "created" "2015/07/01" "lastloggedin" "2015-08-09T23:00:00+00:00" "contact" "fgolemo+hushtag@gmail.com"
 
-HMSET user:2 "id" "2" "name" "test" "password_hash" "057a0ac66d564962f1bcb0e0f6ec1973f3e88305c5aefa94b4bca4c4076f2633" "avatar" "" "created" "2015/07/15" "lastloggedin" "2015-08-15T012:00:00+00:00" "contact" "don't contact me pls"
+HMSET user:2 "id" "2" "name" "test" "password_hash" "057a0ac66d564962f1bcb0e0f6ec1973f3e88305c5aefa94b4bca4c4076f2633" "avatar" "" "created" "2015/07/15" "lastloggedin" "2015-08-15T12:00:00+00:00" "contact" "don't contact me pls"
 
 SADD users 1 2
 SADD usernames admin test
