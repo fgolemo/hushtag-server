@@ -9,6 +9,7 @@ var handlerRep = require('./modules/rep');
 //var handlerTest = require('./modules/test');
 var handlerComment = require('./modules/comment');
 var handlerVote = require('./modules/vote');
+var handlerStory = require('./modules/story');
 
 
 app.set('port', (process.env.PORT || 5000));
@@ -35,6 +36,7 @@ app.get('/', function (request, response) {
 });
 
 app.use('/', handlerHushtag);
+app.use('/', handlerStory);
 app.use('/', handlerEvent);
 app.use('/', handlerLocation);
 app.use('/', handlerUser);
