@@ -7,12 +7,13 @@ var url = require('url');
 var redisURL = url.parse(process.env.REDISCLOUD_URL || "redis://user:foobared@127.0.0.1:6379");
 var client = redis.createClient(redisURL.port, redisURL.hostname, {no_ready_check: true});
 client.auth(redisURL.auth.split(":")[1]);
-
+var commentHelper = require('./commentHelper');
 
 module.exports = {
     client: client,
     getAll: function (key, res, next, unpacker) {
         this.getIDs(key + "s", function (ids) {
+            console.log("INFO: getting all" + key + "s");
             var multi = client.multi();
             ids.forEach(function (id, index) {
                 multi.hgetallAsync(key + ":" + id.toString());
@@ -47,12 +48,12 @@ module.exports = {
             console.dir(obj);
             console.log(err);
         });
-
     },
 
     updateDetail: function (key, id, obj, res, next, unpacker) {
         obj.id = id;
         var hash = key + ":" + id;
+        console.dir(obj);
         client.hmset(hash, obj, function (err) {
             if (err) {
                 console.log("error while updating data for " + hash);
@@ -84,10 +85,74 @@ module.exports = {
 
     getDetail: function (key, id, res, next, unpacker) {
         var hash = key + ":" + id;
+        console.log("INFO: getting " + hash);
         client.hgetallAsync(hash).then(function (obj) {
             res.json(unpacker(obj));
         }).error(function (err) {
             console.log("error while looking for hash:" + hash);
+            console.log(err);
+        });
+    },
+
+    postComment: function (key, id, obj, res, next) {
+        var hashParent = key + ":" + id + ":comments";
+        obj = commentHelper.packer(obj);
+        console.log("INFO: posting comments for " + hashParent);
+        client.incrAsync("commentID").then(function (nextID) {
+            obj.id = nextID;
+            var hashComment = "comment:" + nextID;
+            return client.multi([
+                ["hmset", hashComment, obj],
+                ["sadd", "comments", nextID],
+                ["sadd", hashParent, nextID]
+            ]).execAsync();
+        }).then(function () {
+            res.json({status: "success", obj: commentHelper.unpacker(obj)});
+        }).error(function (err) {
+            console.log("error while inserting comment for " + hashParent);
+            console.dir(obj);
+            console.log(err);
+        });
+    },
+
+    getComments: function (key, id, res, next) {
+        var hash = key + ":" + id + ":comments";
+        console.log("INFO: getting comments for " + hash);
+        client.smembersAsync(hash).then(function (ids) {
+
+            var multi = client.multi();
+            ids.forEach(function (id, index) {
+                multi.hgetallAsync("comment:" + id.toString());
+            });
+            multi.execAsync().then(function (replies) {
+                var out = [];
+                replies.forEach(function (obj, index) {
+                    out.push(commentHelper.unpacker(obj));
+                });
+                return out;
+            }).then(function (data) {
+                res.json(data);
+            }).error(function (err) {
+                console.log("error while retrieving comment details for hash:" + hash);
+                console.log(err);
+            });
+
+        }).error(function (err) {
+            console.log("error while retrieving comment IDs for hash:" + hash);
+            console.log(err);
+        });
+    },
+
+    deleteComment: function (key, id, cid, res, next) {
+        var hashParent = key + ":" + id + ":comments";
+        var multi = client.multi([
+            ["srem", hashParent, cid],
+            ["srem", "commentID", cid]
+        ]);
+        multi.execAsync().then(function (data) {
+            res.json({status: "success", id: id, cid: cid});
+        }).error(function (err) {
+            console.log("error while deleting comment " + cid + " for obj " + key + ":" + id);
             console.log(err);
         });
     }

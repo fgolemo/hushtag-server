@@ -2,34 +2,37 @@ AUTH foobared
 
 FLUSHDB
 
-HMSET hushtag:1 "id" "1" "name" "Amphetamine" "family" "[]" "pics" '["img/200px.png","img/200px2.png"]' "dosages" "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim." "legality" "Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. " "safety" "Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum." "description" "Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper." "synonyms" "[]" "forms" "tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus." "stories" "[1, 2]" "comments" "[]" "tags" "[]" "flags" "[]"
+HMSET hushtag:1 "id" "1" "name" "Amphetamine" "family" "[]" "pics" '["img/200px.png","img/200px2.png"]' "dosages" "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim." "legality" "Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. " "safety" "Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum." "description" "Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper." "synonyms" "[]" "forms" "tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus." "stories" "[1, 2]" "tags" "[]" "flags" "[]"
 
-HMSET hushtag:2 "id" "2" "name" "BBB" "family" "[]" "pics" '["img/200px.png","img/200px2.png"]' "dosages" "dosages...2" "legality" "legality...2" "safety" "safety...2" "description" "desc...2" "synonyms" "[]" "forms" "forms...2" "stories" "[]" "comments" "[]" "tags" "[]" "flags" "[]"
+HMSET hushtag:2 "id" "2" "name" "BBB" "family" "[]" "pics" '["img/200px.png","img/200px2.png"]' "dosages" "dosages...2" "legality" "legality...2" "safety" "safety...2" "description" "desc...2" "synonyms" "[]" "forms" "forms...2" "stories" "[]" "tags" "[]" "flags" "[]"
 
-HMSET hushtag:3 "id" "3" "name" "AAABB" "family" "[1]" "pics" '["img/200px.png","img/200px2.png"]' "dosages" "dosages...3" "legality" "legality...3" "safety" "safety...3" "description" "desc...3" "synonyms" "[]" "forms" "forms...3" "stories" "[]" "comments" "[]" "tags" "[]" "flags" "[]"
+HMSET hushtag:3 "id" "3" "name" "AAABB" "family" "[1]" "pics" '["img/200px.png","img/200px2.png"]' "dosages" "dosages...3" "legality" "legality...3" "safety" "safety...3" "description" "desc...3" "synonyms" "[]" "forms" "forms...3" "stories" "[]" "tags" "[]" "flags" "[]"
 
 SADD hushtags 1 2 3
 SET hushtagID 3
 
-HMSET story:1 "id" "1" "pics" '["/img/200px.png"]' "comments" "[]" "flags" "[]" "tags" "[]" "datetime" "2015-10-02T01:28:23+00:00" "hushtag" "1" "dosage" "2 pills" "effect_positive" "got a long sweet high and super touchy. later on the music got amazingly intense" "effect_negative" "pretty hungover the next day, dry mouth" "effect_duration" "the two pills lasted us the whole evening, from around 16 to midnight" "event" "1"
+HMSET story:1 "id" "1" "pics" '["/img/200px.png"]' "flags" "[]" "tags" "[]" "created" "2015-10-02T01:28:23+00:00" "hushtag" "1" "dosage" "2 pills" "effect_positive" "got a long sweet high and super touchy. later on the music got amazingly intense" "effect_negative" "pretty hungover the next day, dry mouth" "effect_duration" "the two pills lasted us the whole evening, from around 16 to midnight" "event" "1" owner "1"
 
-HMSET story:2 "id" "2" "pics" '["/img/200px2.png"]' "comments" "[]" "flags" "[]" "tags" "[]" "datetime" "2015-10-01T12:00:00+00:00" "hushtag" "1" "dosage" "1 pill" "effect_positive" "warm fuzzy feeling" "effect_negative" "I took this as an experiment to see if it helps me work. It doesn not. Couldn't focus on anything, had to stop working and clean the room and dance and work out." "effect_duration" "kicked in after half an hour and lasted ~3h" "event" ""
+HMSET story:2 "id" "2" "pics" '["/img/200px2.png"]' "flags" "[]" "tags" "[]" "created" "2015-10-01T12:00:00+00:00" "hushtag" "1" "dosage" "1 pill" "effect_positive" "warm fuzzy feeling" "effect_negative" "I took this as an experiment to see if it helps me work. It doesn not. Couldn't focus on anything, had to stop working and clean the room and dance and work out." "effect_duration" "kicked in after half an hour and lasted ~3h" "event" ""
 
 SADD storys 1 2
 SET storyID 2
 
 
-HMSET event:1 "id" "1" "name" "Steve Aoki" "pics" '["/img/200px.png","img/200px2.png"]' "description" "desc..." "comments" "[]" "tags" "[]" "flags" "[]" "start" "2015-08-08T21:00:00+00:00" "end" "2015-08-08T23:59:59+00:00" "invite_only" false "invitees" "[]" "location" "1" "owner" "1" "upvotes" "0" "downvotes" "0"
+HMSET event:1 "id" "1" "name" "Steve Aoki" "pics" '["/img/200px.png","img/200px2.png"]' "description" "desc..." "tags" "[]" "flags" "[]" "start" "2015-08-08T21:00:00+00:00" "end" "2015-08-08T23:59:59+00:00" "invite_only" false "invitees" "[]" "location" "1" "owner" "1" "upvotes" "0" "downvotes" "0"
 
-HMSET event:2 "id" "2" "name" "Melt Festival" "pics" '["/img/200px.png","img/200px2.png","img/200px3.png"]' "description" "desc...2" "comments" "[2]" "tags" "[]" "flags" "[]" "start" "2015-08-10T18:00:00+00:00" "end" "2015-08-15T23:00:00+00:00" "invite_only" false "invitees" "[]" "location" "2" "owner" "2" "upvotes" "0" "downvotes" "0"
+HMSET event:2 "id" "2" "name" "Melt Festival" "pics" '["/img/200px.png","img/200px2.png","img/200px3.png"]' "description" "desc...2" "tags" "[]" "flags" "[]" "start" "2015-08-10T18:00:00+00:00" "end" "2015-08-15T23:00:00+00:00" "invite_only" false "invitees" "[]" "location" "2" "owner" "2" "upvotes" "0" "downvotes" "0"
 
-HMSET event:3 "id" "3" "name" "Fiesta Macumba" "pics" '["img/200px.png","img/200px2.png","img/200px3.png","img/500px.png"]' "description" "desc...3" "comments" "[1]" "tags" "[]" "flags" "[]" "start" "2015-08-09T23:00:00+00:00" "end" null "invite_only" false "invitees" "[]" "location" "3" "owner" "1" "upvotes" "0" "downvotes" "0"
+HMSET event:3 "id" "3" "name" "Fiesta Macumba" "pics" '["img/200px.png","img/200px2.png","img/200px3.png","img/500px.png"]' "description" "desc...3"  "tags" "[]" "flags" "[]" "start" "2015-08-09T23:00:00+00:00" "end" null "invite_only" false "invitees" "[]" "location" "3" "owner" "1" "upvotes" "0" "downvotes" "0"
 
 SADD events 1 2 3
 SET eventID 3
 
 SADD event:2:voters 1 2
 SADD event:1:voters 2
+
+SADD event:2:comments 1
+SADD event:3:comments 2
 
 HMSET location:1 "id" "1" "name" "Cool Club" "city" "Southampton" "country" "United Kingdom" "countryCode" "UK"
 HMSET location:2 "id" "2" "name" "Melkweg" "city" "Amsterdam" "country" "Netherlands" "countryCode" "NL"
@@ -60,8 +63,8 @@ SET user:1:token 1234567890ab
 EXPIRE token:1234567890ab 3600
 EXPIRE user:1:token 3600
 
-HMSET comment:1 "id" "1" "content" "cool thing - will check out" "created" "2015-08-18T06:36:40+00:00" "flags" "[]" "owner" "1"
-HMSET comment:2 "id" "2" "content" "yay, more comments" "created" "2015-08-18T04:36:40+00:00" "flags" "[]" "owner" "1"
+HMSET comment:1 "id" "1" "content" "cool thing - will check out" "created" "2015-08-18T06:36:40+00:00" "flags" "[]" "owner" "1" "upvotes" "0" "downvotes" "0"
+HMSET comment:2 "id" "2" "content" "yay, more comments" "created" "2015-08-18T04:36:40+00:00" "flags" "[]" "owner" "1" "upvotes" "0" "downvotes" "0"
 SADD comments 1 2
 SET commentID 2
 

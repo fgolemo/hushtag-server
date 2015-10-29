@@ -8,7 +8,6 @@ module.exports = (function () {
             return {
                 name: obj.name,
                 pics: JSON.stringify(obj.pics || []),
-                comments: JSON.stringify(obj.comments || []),
                 flags: JSON.stringify(obj.flags || []),
                 tags: JSON.stringify(obj.tags || []),
                 stories: JSON.stringify(obj.stories || []),
@@ -24,7 +23,6 @@ module.exports = (function () {
             obj.pics = JSON.parse(obj.pics);
             obj.flags = JSON.parse(obj.flags);
             obj.tags = JSON.parse(obj.tags);
-            obj.comments = JSON.parse(obj.comments);
             obj.family = JSON.parse(obj.family);
             obj.stories = JSON.parse(obj.stories);
             obj.synonyms = JSON.parse(obj.synonyms);
