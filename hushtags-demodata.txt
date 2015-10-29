@@ -2,13 +2,13 @@ AUTH foobared
 
 FLUSHDB
 
-HMSET hushtag:1 "id" "1" "name" "Alcohol" "family" "[]" "pics" '["img/ht-alc1.jpg","img/ht-alc2.jpg"]' "dosages" "dosages...2" "legality" "legality...2" "safety" "safety...2" "description" "desc...2" "synonyms" '["booze","bevvies"]' "forms" "forms...2" "stories" "[]" "tags" "[]" "flags" "[]"
+HMSET hushtag:1 "id" "1" "name" "Alcohol" "family" "[]" "pics" '["img/ht-alc1.png","img/ht-alc2.png"]' "dosages" "dosages...2" "legality" "legality...2" "safety" "safety...2" "description" "desc...2" "synonyms" '["booze","bevvies"]' "forms" "forms...2" "stories" "[]" "tags" "[]" "flags" "[]"
 
-HMSET hushtag:2 "id" "2" "name" "Amphetamines" "family" "[]" "pics" '["img/ht-amp1.jpg","img/ht-amp2.jpg"]' "dosages" "dosages...3" "legality" "legality...3" "safety" "safety...3" "description" "desc...3" "synonyms" '["speed", "billy", "whiz", "phet"]' "forms" "forms...3" "stories" "[1,2]" "tags" "[]" "flags" "[]"
+HMSET hushtag:2 "id" "2" "name" "Amphetamines" "family" "[]" "pics" '["img/ht-amp1.png","img/ht-amp2.png"]' "dosages" "dosages...3" "legality" "legality...3" "safety" "safety...3" "description" "desc...3" "synonyms" '["speed", "billy", "whiz", "phet"]' "forms" "forms...3" "stories" "[1,2]" "tags" "[]" "flags" "[]"
 
-HMSET hushtag:3 "id" "3" "name" "Cannabis" "family" "[]" "pics" '["img/ht-can1.jpg","img/ht-can2.jpg","img/ht-can3.jpg","img/ht-can4.jpg"]' "dosages" "dosages...3" "legality" "legality...3" "safety" "safety...3" "description" "desc...3" "synonyms" '["dope", "hash", "weed", "pot", "skunk", "ganga", "zoot", "spliff", "green"]' "forms" "forms...3" "stories" "[]" "tags" "[]" "flags" "[]"
+HMSET hushtag:3 "id" "3" "name" "Cannabis" "family" "[]" "pics" '["img/ht-can1.png","img/ht-can2.png","img/ht-can3.png","img/ht-can4.png"]' "dosages" "dosages...3" "legality" "legality...3" "safety" "safety...3" "description" "desc...3" "synonyms" '["dope", "hash", "weed", "pot", "skunk", "ganga", "zoot", "spliff", "green"]' "forms" "forms...3" "stories" "[]" "tags" "[]" "flags" "[]"
 
-HMSET hushtag:4 "id" "4" "name" "Cocaine" "family" "[]" "pics" '["img/ht-coc1.jpg","img/ht-coc2.jpg","img/ht-coc3.jpg"]' "dosages" "dosages...3" "legality" "legality...3" "safety" "safety...3" "description" "desc...3" "synonyms" '["coke", "charlie", "white", "snow", "sniff", "white lady"]' "forms" "forms...3" "stories" "[]" "tags" "[]" "flags" "[]"
+HMSET hushtag:4 "id" "4" "name" "Cocaine" "family" "[]" "pics" '["img/ht-coc1.png","img/ht-coc2.png","img/ht-coc3.png"]' "dosages" "dosages...3" "legality" "legality...3" "safety" "safety...3" "description" "desc...3" "synonyms" '["coke", "charlie", "white", "snow", "sniff", "white lady"]' "forms" "forms...3" "stories" "[]" "tags" "[]" "flags" "[]"
 
 HMSET hushtag:5 "id" "5" "name" "Ecstasy" "family" "[]" "pics" '["img/200px.png","img/200px2.png"]' "dosages" "dosages...3" "legality" "legality...3" "safety" "safety...3" "description" "desc...3" "synonyms" '["e", "beans", "pills", "doves", "apples"]' "forms" "forms...3" "stories" "[]" "tags" "[]" "flags" "[]"
 
@@ -33,19 +33,19 @@ HMSET hushtag:14 "id" "14" "name" "Solvents" "family" "[]" "pics" '["img/200px.p
 SADD hushtags 1 2 3 4 5 6 7 8 9 10 11 12 13 14
 SET hushtagID 14
 
-HMSET story:1 "id" "1" "pics" '["/img/st-amp1.jpg"]' "flags" "[]" "tags" "[]" "created" "2015-10-02T01:28:23+00:00" "hushtag" "1" "dosage" "2 pills" "effect_positive" "got a long sweet high and super touchy. later on the music got amazingly intense" "effect_negative" "pretty hungover the next day, dry mouth" "effect_duration" "the two pills lasted us the whole evening, from around 16 to midnight" "event" "1" owner "1"
+HMSET story:1 "id" "1" "pics" '["/img/st-amp1.png"]' "flags" "[]" "tags" "[]" "created" "2015-10-02T01:28:23+00:00" "hushtag" "1" "dosage" "2 pills" "effect_positive" "got a long sweet high and super touchy. later on the music got amazingly intense" "effect_negative" "pretty hungover the next day, dry mouth" "effect_duration" "the two pills lasted us the whole evening, from around 16 to midnight" "event" "1" owner "1"
 
-HMSET story:2 "id" "2" "pics" '["/img/st-amp2.jpg"]' "flags" "[]" "tags" "[]" "created" "2015-10-01T12:00:00+00:00" "hushtag" "1" "dosage" "1 pill" "effect_positive" "warm fuzzy feeling" "effect_negative" "I took this as an experiment to see if it helps me work. It doesn not. Couldn't focus on anything, had to stop working and clean the room and dance and work out." "effect_duration" "kicked in after half an hour and lasted ~3h" "event" ""
+HMSET story:2 "id" "2" "pics" '["/img/st-amp2.png"]' "flags" "[]" "tags" "[]" "created" "2015-10-01T12:00:00+00:00" "hushtag" "1" "dosage" "1 pill" "effect_positive" "warm fuzzy feeling" "effect_negative" "I took this as an experiment to see if it helps me work. It doesn not. Couldn't focus on anything, had to stop working and clean the room and dance and work out." "effect_duration" "kicked in after half an hour and lasted ~3h" "event" ""
 
 SADD storys 1 2
 SET storyID 2
 
 
-HMSET event:1 "id" "1" "name" "Steve Aoki" "pics" '["/img/ev-ste1.jpg","img/ev-ste2.jpg"]' "description" "desc..." "tags" "[]" "flags" "[]" "start" "2015-08-08T21:00:00+00:00" "end" "2015-08-08T23:59:59+00:00" "invite_only" false "invitees" "[]" "location" "1" "owner" "1" "upvotes" "0" "downvotes" "0"
+HMSET event:1 "id" "1" "name" "Steve Aoki" "pics" '["/img/ev-ste1.png","img/ev-ste2.png"]' "description" "desc..." "tags" "[]" "flags" "[]" "start" "2015-08-08T21:00:00+00:00" "end" "2015-08-08T23:59:59+00:00" "invite_only" false "invitees" "[]" "location" "1" "owner" "1" "upvotes" "0" "downvotes" "0"
 
-HMSET event:2 "id" "2" "name" "Melt Festival" "pics" '["/img/ev-mel1.jpg","img/ev-mel2.jpg","img/ev-mel3.jpg"]' "description" "desc...2" "tags" "[]" "flags" "[]" "start" "2015-08-10T18:00:00+00:00" "end" "2015-08-15T23:00:00+00:00" "invite_only" false "invitees" "[]" "location" "2" "owner" "2" "upvotes" "0" "downvotes" "0"
+HMSET event:2 "id" "2" "name" "Melt Festival" "pics" '["/img/ev-mel1.png","img/ev-mel2.png","img/ev-mel3.png"]' "description" "desc...2" "tags" "[]" "flags" "[]" "start" "2015-08-10T18:00:00+00:00" "end" "2015-08-15T23:00:00+00:00" "invite_only" false "invitees" "[]" "location" "2" "owner" "2" "upvotes" "0" "downvotes" "0"
 
-HMSET event:3 "id" "3" "name" "Fiesta Macumba" "pics" '["img/ev-fie1.jpg"]' "description" "desc...3"  "tags" "[]" "flags" "[]" "start" "2015-08-09T23:00:00+00:00" "end" null "invite_only" false "invitees" "[]" "location" "3" "owner" "1" "upvotes" "0" "downvotes" "0"
+HMSET event:3 "id" "3" "name" "Fiesta Macumba" "pics" '["img/ev-fie1.png"]' "description" "desc...3"  "tags" "[]" "flags" "[]" "start" "2015-08-09T23:00:00+00:00" "end" null "invite_only" false "invitees" "[]" "location" "3" "owner" "1" "upvotes" "0" "downvotes" "0"
 
 SADD events 1 2 3
 SET eventID 3
