@@ -33,17 +33,17 @@ HMSET hushtag:14 "id" "14" "name" "Solvents" "family" "[]" "pics" '["img/200px.p
 SADD hushtags 1 2 3 4 5 6 7 8 9 10 11 12 13 14
 SET hushtagID 14
 
-HMSET story:1 "id" "1" "pics" '["/img/st-amp1.png"]' "flags" "[]" "tags" "[]" "created" "2015-10-02T01:28:23+00:00" "hushtag" "1" "dosage" "2 pills" "effect_positive" "got a long sweet high and super touchy. later on the music got amazingly intense" "effect_negative" "pretty hungover the next day, dry mouth" "effect_duration" "the two pills lasted us the whole evening, from around 16 to midnight" "event" "1" owner "1"
+HMSET story:1 "id" "1" "pics" '["img/st-amp1.png"]' "flags" "[]" "tags" "[]" "created" "2015-10-02T01:28:23+00:00" "hushtag" "1" "dosage" "2 pills" "effect_positive" "got a long sweet high and super touchy. later on the music got amazingly intense" "effect_negative" "pretty hungover the next day, dry mouth" "effect_duration" "the two pills lasted us the whole evening, from around 16 to midnight" "event" "1" owner "1"
 
-HMSET story:2 "id" "2" "pics" '["/img/st-amp2.png"]' "flags" "[]" "tags" "[]" "created" "2015-10-01T12:00:00+00:00" "hushtag" "1" "dosage" "1 pill" "effect_positive" "warm fuzzy feeling" "effect_negative" "I took this as an experiment to see if it helps me work. It doesn not. Couldn't focus on anything, had to stop working and clean the room and dance and work out." "effect_duration" "kicked in after half an hour and lasted ~3h" "event" ""
+HMSET story:2 "id" "2" "pics" '["img/st-amp2.png"]' "flags" "[]" "tags" "[]" "created" "2015-10-01T12:00:00+00:00" "hushtag" "1" "dosage" "1 pill" "effect_positive" "warm fuzzy feeling" "effect_negative" "I took this as an experiment to see if it helps me work. It doesn not. Couldn't focus on anything, had to stop working and clean the room and dance and work out." "effect_duration" "kicked in after half an hour and lasted ~3h" "event" ""
 
 SADD storys 1 2
 SET storyID 2
 
 
-HMSET event:1 "id" "1" "name" "Steve Aoki" "pics" '["/img/ev-ste1.png","img/ev-ste2.png"]' "description" "desc..." "tags" "[]" "flags" "[]" "start" "2015-08-08T21:00:00+00:00" "end" "2015-08-08T23:59:59+00:00" "invite_only" false "invitees" "[]" "location" "1" "owner" "1" "upvotes" "0" "downvotes" "0"
+HMSET event:1 "id" "1" "name" "Steve Aoki" "pics" '["img/ev-ste1.png","img/ev-ste2.png"]' "description" "desc..." "tags" "[]" "flags" "[]" "start" "2015-08-08T21:00:00+00:00" "end" "2015-08-08T23:59:59+00:00" "invite_only" false "invitees" "[]" "location" "1" "owner" "1" "upvotes" "0" "downvotes" "0"
 
-HMSET event:2 "id" "2" "name" "Melt Festival" "pics" '["/img/ev-mel1.png","img/ev-mel2.png","img/ev-mel3.png"]' "description" "desc...2" "tags" "[]" "flags" "[]" "start" "2015-08-10T18:00:00+00:00" "end" "2015-08-15T23:00:00+00:00" "invite_only" false "invitees" "[]" "location" "2" "owner" "2" "upvotes" "0" "downvotes" "0"
+HMSET event:2 "id" "2" "name" "Melt Festival" "pics" '["img/ev-mel1.png","img/ev-mel2.png","img/ev-mel3.png"]' "description" "desc...2" "tags" "[]" "flags" "[]" "start" "2015-08-10T18:00:00+00:00" "end" "2015-08-15T23:00:00+00:00" "invite_only" false "invitees" "[]" "location" "2" "owner" "2" "upvotes" "0" "downvotes" "0"
 
 HMSET event:3 "id" "3" "name" "Fiesta Macumba" "pics" '["img/ev-fie1.png"]' "description" "desc...3"  "tags" "[]" "flags" "[]" "start" "2015-08-09T23:00:00+00:00" "end" null "invite_only" false "invitees" "[]" "location" "3" "owner" "1" "upvotes" "0" "downvotes" "0"
 
