@@ -1,5 +1,6 @@
 var rest = require('./rest');
 var Promise = require('bluebird');
+var _ = require('underscore');
 
 var getAllObjNames = function (objType) {
     return new Promise(function(resolve, reject) {
@@ -26,33 +27,28 @@ var getAllObjNames = function (objType) {
 
 
 module.exports = {
+    tags: [],
     updateObjectTags: function () {
         console.log("DBG: updating tag index");
-        // get all users, events, hushtags, locations
-        // store their name, type & ID
-        var objectTags = [];
-
-        //getAllObjNames("event").then(function(data) {
-        //    console.log("DBG: got actual data in mother fun:");
-        //    console.dir(data);
-        //});
-        //getAllObjNames("hushtag").then(function(data) {
-        //    console.log("DBG: got actual data in mother fun:");
-        //    console.dir(data);
-        //});
-        //
-
-        Promise.join(
-            getAllObjNames("event"),
-            getAllObjNames("hushtag"),
-            function (events, hushtags) {
-                console.log("got combined data");
-                console.dir(events);
-                console.dir(hushtags);
-            }
-        );
-
-        return {};
+        var self = this;
+        return new Promise(function(resolve, reject) {
+            Promise.join(
+                getAllObjNames("event"),
+                getAllObjNames("hushtag"),
+                getAllObjNames("user"),
+                getAllObjNames("location"),
+                function (events, hushtags, users, locations) {
+                    //console.log("got combined data");
+                    //console.dir(events);
+                    //console.dir(hushtags);
+                    //console.dir(users);
+                    //console.dir(locations);
+                    _.extend(self.tags, events, hushtags, users, locations);
+                    //console.dir(self.tags);
+                    resolve(self.tags);
+                }
+            );
+        });
     }
 
 };
