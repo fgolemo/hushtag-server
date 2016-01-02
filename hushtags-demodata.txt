@@ -40,6 +40,7 @@ HMSET story:2 "id" "2" "pics" '["img/st-amp2.png"]' "flags" "[]" "tags" "[]" "cr
 SADD storys 1 2
 SET storyID 2
 
+HMSET tags:objects "event:1" "Steve Aoki" "event:2" "Melt Festival" "event:3" "Fiesta Macumba" "user:1" "admin" "user:2" "test" "hushtag:2" "Amphetamines|speed,billy,wiz,phet"
 
 HMSET event:1 "id" "1" "name" "Steve Aoki" "pics" '["img/ev-ste1.png","img/ev-ste2.png"]' "description" "desc..." "tags" "[]" "flags" "[]" "start" "2015-08-08T21:00:00+00:00" "end" "2015-08-08T23:59:59+00:00" "invite_only" false "invitees" "[]" "location" "1" "owner" "1" "upvotes" "0" "downvotes" "0"
 
