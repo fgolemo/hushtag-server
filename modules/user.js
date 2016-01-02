@@ -2,6 +2,7 @@ var express = require('express');
 var moment = require('moment');
 var rest = require('./rest');
 var token = require('./token');
+var tagsIndexer = require('./tagsIndexer');
 
 module.exports = (function () {
     'use strict';
@@ -107,6 +108,7 @@ module.exports = (function () {
                     var userObj = unpackUserPrivileged(obj);
                     userObj.token = token;
                     res.json({status: "success", obj: userObj});
+                    tagsIndexer.updateObjectTags();
                 });
             }).error(function (err) {
                 console.log("error while inserting data for " + hash);

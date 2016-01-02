@@ -46,10 +46,11 @@ app.use('/', handlerRep.router);
 //app.use('/', handlerTest);
 app.use('/', handlerComment);
 app.use('/', handlerVote);
+app.use('/', tagsIndexer.handler);
 
 app.listen(app.get('port'), function () {
     console.log('Node app is running on port', app.get('port'));
 });
 
-tagsIndexer.updateObjectTags().then(console.dir);
+//tagsIndexer.updateObjectTags().then(console.dir);
 

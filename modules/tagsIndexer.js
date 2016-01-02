@@ -1,6 +1,7 @@
 var rest = require('./rest');
 var Promise = require('bluebird');
 var _ = require('underscore');
+var express = require('express');
 
 var getAllObjNames = function (objType) {
     return new Promise(function(resolve, reject) {
@@ -24,31 +25,37 @@ var getAllObjNames = function (objType) {
     });
 };
 
+var tags = {};
+
+var updateObjectTags = function () {
+    console.log("DBG: updating tag index");
+    return new Promise(function(resolve, reject) {
+        Promise.join(
+            getAllObjNames("event"),
+            getAllObjNames("hushtag"),
+            getAllObjNames("user"),
+            getAllObjNames("location"),
+            function (events, hushtags, users, locations) {
+                tags = {};
+                _.extend(tags, events, hushtags, users, locations);
+                resolve(tags);
+            }
+        );
+    });
+};
+
+var getTags = function (req, res, next) {
+    res.json({status: "success", tags: tags});
+};
+
+var app = express.Router();
+app.get('/tags', getTags);
 
 
 module.exports = {
-    tags: [],
-    updateObjectTags: function () {
-        console.log("DBG: updating tag index");
-        var self = this;
-        return new Promise(function(resolve, reject) {
-            Promise.join(
-                getAllObjNames("event"),
-                getAllObjNames("hushtag"),
-                getAllObjNames("user"),
-                getAllObjNames("location"),
-                function (events, hushtags, users, locations) {
-                    //console.log("got combined data");
-                    //console.dir(events);
-                    //console.dir(hushtags);
-                    //console.dir(users);
-                    //console.dir(locations);
-                    _.extend(self.tags, events, hushtags, users, locations);
-                    //console.dir(self.tags);
-                    resolve(self.tags);
-                }
-            );
-        });
-    }
-
+    tags: tags,
+    updateObjectTags: updateObjectTags,
+    handler: app
 };
+
+updateObjectTags();

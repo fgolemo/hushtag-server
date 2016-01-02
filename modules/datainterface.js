@@ -1,6 +1,7 @@
 var express = require('express');
 var rest = require('./rest');
 var token = require('./token');
+var tagsIndexer = require('./tagsIndexer');
 
 module.exports = function (name, packer, unpacker) {
     'use strict';
@@ -30,6 +31,7 @@ module.exports = function (name, packer, unpacker) {
         token.verifyUT(userToken, res, function () {
             console.log("INFO: posting obj: " + name + ":" + obj.name);
             rest.createDetail(name, obj, res, next, unpacker);
+            tagsIndexer.updateObjectTags();
         });
     }
 
@@ -40,12 +42,14 @@ module.exports = function (name, packer, unpacker) {
         token.verifyUT(userToken, res, function () {
             console.log("INFO: putting obj: " + name + ":" + id);
             rest.updateDetail(name, id, obj, res, next, unpacker);
+            tagsIndexer.updateObjectTags();
         });
     }
 
     function deleteData(req, res, next) {
         var id = req.params.id;
         rest.deleteDetail(name, id, res, next);
+        tagsIndexer.updateObjectTags();
     }
 
     function postComment(req, res, next) {
