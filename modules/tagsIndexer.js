@@ -13,7 +13,12 @@ var getAllObjNames = function (objType) {
             multi.execAsync().then(function (replies) {
                 var out = [];
                 replies.forEach(function (obj, index) {
-                    out[objType + ":" + obj[0]] = obj[1]
+                    //out[objType + ":" + obj[0]] = obj[1]
+                    out.push({
+                        type: objType,
+                        id: obj[0],
+                        name: obj[1]
+                    });
                 });
                 resolve(out);
             });
@@ -25,7 +30,7 @@ var getAllObjNames = function (objType) {
     });
 };
 
-var tags = {};
+var tags = [];
 
 var updateObjectTags = function () {
     console.log("DBG: updating tag index");
@@ -36,8 +41,8 @@ var updateObjectTags = function () {
             getAllObjNames("user"),
             getAllObjNames("location"),
             function (events, hushtags, users, locations) {
-                tags = {};
-                _.extend(tags, events, hushtags, users, locations);
+                tags = [];
+                tags = tags.concat(events, hushtags, users, locations);
                 resolve(tags);
             }
         );
