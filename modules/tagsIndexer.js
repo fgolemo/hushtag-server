@@ -3,8 +3,16 @@ var Promise = require('bluebird');
 var _ = require('underscore');
 var express = require('express');
 
+var slugify = function (name) {
+    return name
+        .toLowerCase()
+        .replace(/ /g, '-')
+        .replace(/[^\w-]+/g, '-')
+        ;
+};
+
 var getAllObjNames = function (objType) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         rest.client.smembersAsync(objType + "s").then(function (ids) {
             var multi = rest.client.multi();
             ids.forEach(function (id) {
@@ -12,18 +20,30 @@ var getAllObjNames = function (objType) {
             });
             multi.execAsync().then(function (replies) {
                 var out = [];
+                var slugs = [];
+
                 replies.forEach(function (obj, index) {
-                    //out[objType + ":" + obj[0]] = obj[1]
+                    var slug = slugify(obj[1]);
+                    var slugClean = true;
+                    while (slugs.indexOf(slug) !== -1) {
+                        if (slugClean) {
+                            slugClean = false;
+                            slug += "-1";
+                        } else {
+                            slug = slug.substr(0, slug.length - 2) + "-" + (parseInt(slug.substr(slug.length - 1)) + 1 + "");
+                        }
+                    }
                     out.push({
                         type: objType,
                         id: obj[0],
-                        name: obj[1]
+                        name: obj[1],
+                        slug: slug
                     });
                 });
                 resolve(out);
             });
         }).error(function (err) {
-            console.log("error while loading all objectnames for "+objType);
+            console.log("error while loading all objectnames for " + objType);
             console.log(err);
             reject(err);
         });
@@ -34,7 +54,7 @@ var tags = [];
 
 var updateObjectTags = function () {
     console.log("DBG: updating tag index");
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         Promise.join(
             getAllObjNames("event"),
             getAllObjNames("hushtag"),
