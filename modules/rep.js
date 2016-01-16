@@ -1,5 +1,5 @@
 var express = require('express');
-var rest = require('./rest');
+var redis = require("./redis");
 
 module.exports = (function () {
     'use strict';
@@ -16,7 +16,7 @@ module.exports = (function () {
 
     function _getUserRep(id, cb) {
         var hash = "user:" + id + ":rep:";
-        rest.client.multi([
+        redis.client.multi([
             ["get", hash + "events"],
             ["get", hash + "hushtags"],
             ["get", hash + "locations"]
@@ -40,7 +40,7 @@ module.exports = (function () {
         }
         var hash = "user:" + id + ":rep:" + newType;
         var operation = (incrDecr=="incr"?"incr":"decr") + "Async";
-        rest.client[operation](hash).then(function () {
+        redis.client[operation](hash).then(function () {
             cb(true)
         }).error(function (err) {
             console.log("ERROR: increasing rep for user " + id + " on " + type);

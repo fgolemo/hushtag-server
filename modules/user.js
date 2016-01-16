@@ -3,6 +3,7 @@ var moment = require('moment');
 var rest = require('./rest');
 var token = require('./token');
 var tagsIndexer = require('./tagsIndexer');
+var redis = require("./redis");
 
 module.exports = (function () {
     'use strict';
@@ -39,13 +40,13 @@ module.exports = (function () {
     function login(req, res, next) {
         var name = req.body.name;
         var hash = req.body.hash;
-        var p = rest.client.zscoreAsync(["userids", name]).then(function (id) {
+        var p = redis.client.zscoreAsync(["userids", name]).then(function (id) {
             if (id == null) {
                 console.log("INFO: user " + name + " bad login - doesn't exist");
                 res.json({status: "fail", msg: "wrong pass"});
                 return p.cancel();
             } else {
-                return rest.client.hgetallAsync("user:" + id);
+                return redis.client.hgetallAsync("user:" + id);
             }
         }).then(function (userData) {
             if (userData.password_hash == hash) {
@@ -82,19 +83,19 @@ module.exports = (function () {
     function signup(req, res, next) {
         var name = req.body.name;
         var pwhash = req.body.hash;
-        var p = rest.client.sismemberAsync(["usernames", name]).then(function (userExists) {
+        var p = redis.client.sismemberAsync(["usernames", name]).then(function (userExists) {
             if (userExists) {
                 console.log("INFO: user " + name + " attempted to sign up, but exists");
                 res.json({status: "fail", msg: "name is already taken"});
                 return p.cancel();
             } else {
-                return rest.client.incrAsync("userID");
+                return redis.client.incrAsync("userID");
             }
         }).then(function (nextID) {
             var obj = makeUser(name, pwhash);
             obj.id = nextID;
             var hash = "user:" + nextID;
-            rest.client.multi([
+            redis.client.multi([
                 ["hmset", hash, obj],
                 ["zadd", "userids", nextID, name],
                 ["sadd", "usernames", name],

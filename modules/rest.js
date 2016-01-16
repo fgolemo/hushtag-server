@@ -1,20 +1,11 @@
-var Promise = require("bluebird");
-var redis = require('redis');
-Promise.promisifyAll(redis);
-Promise.promisifyAll(redis.RedisClient.prototype);
-Promise.promisifyAll(redis.Multi.prototype);
-var url = require('url');
-var redisURL = url.parse(process.env.REDISCLOUD_URL || "redis://user:foobared@127.0.0.1:6379");
-var client = redis.createClient(redisURL.port, redisURL.hostname, {no_ready_check: true});
-client.auth(redisURL.auth.split(":")[1]);
+var redis = require("./redis");
 var commentHelper = require('./commentHelper');
 
 module.exports = {
-    client: client,
     getAll: function (key, res, next, unpacker) {
         this.getIDs(key + "s", function (ids) {
             console.log("INFO: getting all" + key + "s");
-            var multi = client.multi();
+            var multi = redis.client.multi();
             ids.forEach(function (id, index) {
                 multi.hgetallAsync(key + ":" + id.toString());
             });
@@ -34,10 +25,10 @@ module.exports = {
     },
 
     createDetail: function (key, obj, res, next, unpacker) {
-        client.incrAsync(key + "ID").then(function (nextID) {
+        redis.client.incrAsync(key + "ID").then(function (nextID) {
             obj.id = nextID;
             var hash = key + ":" + nextID;
-            return client.multi([
+            return redis.client.multi([
                 ["hmset", hash, obj],
                 ["sadd", key + "s", nextID]
             ]).execAsync();
@@ -54,7 +45,7 @@ module.exports = {
         obj.id = id;
         var hash = key + ":" + id;
         console.dir(obj);
-        client.hmset(hash, obj, function (err) {
+        redis.client.hmset(hash, obj, function (err) {
             if (err) {
                 console.log("error while updating data for " + hash);
                 console.dir(obj);
@@ -66,7 +57,7 @@ module.exports = {
     },
 
     deleteDetail: function (key, id, res, next) {
-        client.sremAsync(key + "s", id).then(function () {
+        redis.client.sremAsync(key + "s", id).then(function () {
             res.json({status: "success", id: id});
         }).error(function (err) {
             console.log("error while deleting id " + id + " for " + key);
@@ -75,7 +66,7 @@ module.exports = {
     },
 
     getIDs: function (key, cb) {
-        client.smembersAsync(key).then(function (obj) {
+        redis.client.smembersAsync(key).then(function (obj) {
             cb(obj);
         }).error(function (err) {
             console.log("error while looking for set members of " + key);
@@ -86,7 +77,7 @@ module.exports = {
     getDetail: function (key, id, res, next, unpacker) {
         var hash = key + ":" + id;
         console.log("INFO: getting " + hash);
-        client.hgetallAsync(hash).then(function (obj) {
+        redis.client.hgetallAsync(hash).then(function (obj) {
             res.json(unpacker(obj));
         }).error(function (err) {
             console.log("error while looking for hash:" + hash);
@@ -98,10 +89,10 @@ module.exports = {
         var hashParent = key + ":" + id + ":comments";
         obj = commentHelper.packer(obj);
         console.log("INFO: posting comments for " + hashParent);
-        client.incrAsync("commentID").then(function (nextID) {
+        redis.client.incrAsync("commentID").then(function (nextID) {
             obj.id = nextID;
             var hashComment = "comment:" + nextID;
-            return client.multi([
+            return redis.client.multi([
                 ["hmset", hashComment, obj],
                 ["sadd", "comments", nextID],
                 ["sadd", hashParent, nextID]
@@ -118,9 +109,9 @@ module.exports = {
     getComments: function (key, id, res, next) {
         var hash = key + ":" + id + ":comments";
         console.log("INFO: getting comments for " + hash);
-        client.smembersAsync(hash).then(function (ids) {
+        redis.client.smembersAsync(hash).then(function (ids) {
 
-            var multi = client.multi();
+            var multi = redis.client.multi();
             ids.forEach(function (id, index) {
                 multi.hgetallAsync("comment:" + id.toString());
             });
@@ -145,7 +136,7 @@ module.exports = {
 
     deleteComment: function (key, id, cid, res, next) {
         var hashParent = key + ":" + id + ":comments";
-        var multi = client.multi([
+        var multi = redis.client.multi([
             ["srem", hashParent, cid],
             ["srem", "commentID", cid]
         ]);

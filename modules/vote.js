@@ -1,8 +1,8 @@
 var express = require('express');
-var rest = require('./rest');
 var token = require('./token');
 var settings = require('./settings');
 var rep = require('./rep');
+var redis = require("./redis");
 
 module.exports = (function () {
     'use strict';
@@ -34,7 +34,7 @@ module.exports = (function () {
     function _hasVoted(userToken, obj, res, cb, cbErr) {
         token.verifyUT(userToken, res, function() {
             var hash = _getVotersHash(obj);
-            rest.client.sismemberAsync([hash, userToken.user]).then(function(response) {
+            redis.client.sismemberAsync([hash, userToken.user]).then(function(response) {
                 cb(response);
             }).error(function (err) {
                 console.log("ERROR: couldn't determine if user "+userToken.user+" has voted for "+obj.type+" "+obj.id);
@@ -54,7 +54,7 @@ module.exports = (function () {
             } else {
                 var hashObj = _getObjHash(obj);
                 var hashVoters = _getVotersHash(obj);
-                rest.client.multi([
+                redis.client.multi([
                     ["hincrby", hashObj, updown+"votes", 1],
                     ["sadd", hashVoters, userToken.user],
                     ["hget", hashObj, "owner"]
@@ -96,7 +96,7 @@ module.exports = (function () {
 
     function _getUserRep(id, cb) {
         var hash = "user:" + id + ":rep:";
-        rest.client.multi([
+        redis.client.multi([
             ["get", hash + "events"],
             ["get", hash + "hushtags"],
             ["get", hash + "locations"]

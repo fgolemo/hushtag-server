@@ -1,7 +1,7 @@
-var rest = require('./rest');
 var Promise = require('bluebird');
 var _ = require('underscore');
 var express = require('express');
+var redis = require("./redis");
 
 var slugify = function (name) {
     return name
@@ -13,8 +13,8 @@ var slugify = function (name) {
 
 var getAllObjNames = function (objType) {
     return new Promise(function (resolve, reject) {
-        rest.client.smembersAsync(objType + "s").then(function (ids) {
-            var multi = rest.client.multi();
+        redis.client.smembersAsync(objType + "s").then(function (ids) {
+            var multi = redis.client.multi();
             ids.forEach(function (id) {
                 multi.hmgetAsync([objType + ":" + id.toString(), "id", "name"]);
             });
@@ -52,6 +52,8 @@ var getAllObjNames = function (objType) {
 
 var tags = [];
 
+var container = {t:[]};
+
 var updateObjectTags = function () {
     console.log("DBG: updating tag index");
     return new Promise(function (resolve, reject) {
@@ -64,6 +66,7 @@ var updateObjectTags = function () {
                 tags = [];
                 tags = tags.concat(events, hushtags, users, locations);
                 resolve(tags);
+                container.t = tags;
             }
         );
     });
@@ -80,7 +83,8 @@ app.get('/tags', getTags);
 module.exports = {
     tags: tags,
     updateObjectTags: updateObjectTags,
-    handler: app
+    handler: app,
+    container: container
 };
 
 updateObjectTags();

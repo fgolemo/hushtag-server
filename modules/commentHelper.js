@@ -1,3 +1,5 @@
+var TagsHelper = require("./tagsHelper");
+
 module.exports = {
     packer: function (obj) {
         return {
@@ -11,6 +13,7 @@ module.exports = {
         obj.flags = JSON.parse(obj.flags);
         obj.upvotes = obj.upvotes || 0;
         obj.downvotes = obj.downvotes || 0;
+        obj.content = TagsHelper.replaceTags(obj.content);
         return obj;
     }
 };
