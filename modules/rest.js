@@ -7,13 +7,28 @@ module.exports = {
             console.log("INFO: getting all" + key + "s");
             var multi = redis.client.multi();
             ids.forEach(function (id, index) {
-                multi.hgetallAsync(key + ":" + id.toString());
+                var hash = key + ":" + id.toString();
+                multi.hgetallAsync(hash);
+                if (key == "hushtag") {
+                    multi.smembersAsync(hash + ":stories");
+                }
             });
             multi.execAsync().then(function (replies) {
                 var out = [];
-                replies.forEach(function (obj, index) {
-                    out.push(unpacker(obj));
-                });
+                if (key == "hushtag") {
+                    var i = 0;
+                    while (i < replies.length) {
+                        var unpackedObj = unpacker(replies[i]);
+                        unpackedObj.stories = replies[i+1];
+                        out.push(unpackedObj);
+                        i += 2;
+                    }
+                } else {
+                    replies.forEach(function (obj, index) {
+                        out.push(unpacker(obj));
+                    });
+                }
+
                 return out;
             }).then(function (data) {
                 res.json(data);
@@ -28,16 +43,16 @@ module.exports = {
         redis.client.incrAsync(key + "ID").then(function (nextID) {
             obj.id = nextID;
             var hash = key + ":" + nextID;
-            var action = redis.client.multi([
+            var actions = [
                 ["hmset", hash, obj],
                 ["sadd", key + "s", nextID]
-            ]);
+            ];
 
             if (key == "story") {
-
+                actions.push(["sadd", "hushtag:"+obj.hushtag+":stories", nextID]);
             }
 
-            return action.execAsync();
+            return redis.client.multi(actions).execAsync();
         }).then(function () {
             res.json({status: "success", obj: unpacker(obj)});
         }).error(function (err) {
@@ -84,7 +99,17 @@ module.exports = {
         var hash = key + ":" + id;
         console.log("INFO: getting " + hash);
         redis.client.hgetallAsync(hash).then(function (obj) {
-            res.json(unpacker(obj));
+            if (key == "hushtag") {
+                redis.client.smembersAsync(hash+":stories").then(function (stories) {
+                    var unpackedObj = unpacker(obj);
+                    unpackedObj.stories = stories;
+                    res.json(unpackedObj);
+                })
+            } else {
+                res.json(unpacker(obj));
+            }
+
+
         }).error(function (err) {
             console.log("error while looking for hash:" + hash);
             console.log(err);

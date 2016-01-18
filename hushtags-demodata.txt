@@ -33,6 +33,8 @@ HMSET hushtag:14 "id" "14" "name" "Solvents" "family" "[]" "pics" '["img/200px.p
 SADD hushtags 1 2 3 4 5 6 7 8 9 10 11 12 13 14
 SET hushtagID 14
 
+SADD hushtag:2:stories 1 2
+
 HMSET story:1 "id" "1" "pics" '["img/st-amp1.png"]' "flags" "[]" "tags" "[]" "created" "2015-10-02T01:28:23+00:00" "hushtag" "1" "dosage" "2 pills" "effect_positive" "got a long sweet high and super touchy. later on the music got amazingly intense" "effect_negative" "pretty hungover the next day, dry mouth" "effect_duration" "the two pills lasted us the whole evening, from around 16 to midnight" "event" "1" owner "1"
 
 HMSET story:2 "id" "2" "pics" '["img/st-amp2.png"]' "flags" "[]" "tags" "[]" "created" "2015-10-01T12:00:00+00:00" "hushtag" "1" "dosage" "1 pill" "effect_positive" "warm fuzzy feeling" "effect_negative" "I took this as an experiment to see if it helps me work. It doesn not. Couldn't focus on anything, had to stop working and clean the room and dance and work out." "effect_duration" "kicked in after half an hour and lasted ~3h" "event" ""
