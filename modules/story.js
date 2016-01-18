@@ -10,7 +10,7 @@ module.exports = (function () {
                 flags: JSON.stringify(obj.flags || []),
                 tags: JSON.stringify(obj.tags || []),
                 owner: obj.owner,
-                created: obj.datetime,
+                created: obj.created,
                 hushtag: obj.hushtag,
                 dosage: obj.dosage,
                 effect_positive: obj.effect_positive,

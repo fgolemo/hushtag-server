@@ -28,10 +28,16 @@ module.exports = {
         redis.client.incrAsync(key + "ID").then(function (nextID) {
             obj.id = nextID;
             var hash = key + ":" + nextID;
-            return redis.client.multi([
+            var action = redis.client.multi([
                 ["hmset", hash, obj],
                 ["sadd", key + "s", nextID]
-            ]).execAsync();
+            ]);
+
+            if (key == "story") {
+
+            }
+
+            return action.execAsync();
         }).then(function () {
             res.json({status: "success", obj: unpacker(obj)});
         }).error(function (err) {
